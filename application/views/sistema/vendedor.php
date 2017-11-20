@@ -145,7 +145,7 @@
 									</div>
 									<div class="col-md-6">
 										<button type="button" class="btn btn-success">Ver pedido</button>
-									</div>
+									</div>#listaProductos
 								</div>
 								<br>
 								<div class="row" id="infoCliente">
@@ -584,7 +584,69 @@ var guardarVenta = function () {
 // Funciones de ver y guardar pedidos
 $('#pedidos').on('change', function() {
 	limpiarPedido();
+	var id = $('#pedidos').val();
+	verPedido(id);
 });
+var verPedido = function (id) {
+	$.ajax({
+		url: base_url+'index.php/controlador_pedido_cli/verPedido',
+		type: 'POST',
+		dataType: 'json',
+		data: {id: id},
+		success:function (data) {
+			//$('.modal_verPedido').modal("show");
+			var html = "";
+			html += "<h1>"+data[0]["nombre"]+"</h1>";
+			html += "<h3>Fecha: "+data[0]["fecha_pedido"]+"</h3>";
+			html += '<table class="table">'+
+				'<thead>'+
+					'<tr>'+
+						'<th>#</th>'+
+						'<th>Producto</th>'+
+						'<th>Descripcion</th>'+
+						'<th>P/U</th>'+
+						'<th>Cantidad</th>'+
+						'<th>Total</th>'+
+					'</tr>'+
+				'</thead>'+
+				'<tbody>';
+					for (var i = 0; i < data.length; i++) {
+						html += '<tr>'+
+							'<td>'+(i+1)+'</td>'+
+							'<td>'+data[i]["nombre_pro"]+" "+data[i]["marca"]+'</td>'+
+							'<td>'+data[i]["descripcion"]+'</td>'+
+							'<td>'+data[i]["precio"]+'</td>'+
+							'<td>'+data[i]["cantidad"]+'</td>'+
+							'<td>'+data[i]["total"]+'</td>'+
+						'</tr>';
+					}
+				html += '</tbody>'+
+				'<tfoot>'+
+					'<tr>'+
+						'<th></th>'+
+						'<th></th>'+
+						'<th></th>'+
+						'<th></th>'+
+						'<th></th>'+
+						'<th>'+data[0]["monto"]+'</th>'+
+					'</tr>'+
+				'</tfoot>'+
+			'</table>';
+			$('#pedidoCliente').empty();
+			$('#pedidoCliente').html(html);
+		}
+	})
+	.done(function() {
+		console.log("success");
+	})
+	.fail(function() {
+		console.log("error");
+	})
+	.always(function() {
+		console.log("complete");
+	});
+
+}
 var limpiarPedido = function () {
 	$('#infoCliente').empty();
 	$('#pedidoCliente').empty();
