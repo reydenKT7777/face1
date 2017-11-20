@@ -1,0 +1,26 @@
+.widgedSucursal{
+  background-color: #71a2ff;
+  color: #fff;
+}
+.labelV{
+  color: #fff;
+  border-radius: 0%;
+}
+.labelV:hover{
+  border-radius: 50%;
+}
+.btnv2:hover{
+  border-radius: 50%;
+}
+.colorLetra{
+  color: #000;
+}
+.cabecera{
+  background-color: #595a63;
+}
+.cabecera:hover{
+  background-color: #232642;
+}
+.bloque{
+  background-color: #e1eaff;
+}
