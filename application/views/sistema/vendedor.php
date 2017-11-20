@@ -21,7 +21,7 @@
 						<center><h1 class="panel-title">Nota venta</h1></center>
 					</div>
 					<div class="panel-body">
-						<div class="">
+							<div class="">
 								<div class="col-xs-12 col-md-12 bloque">
 											<br> <center><h3 style="color:#14b03f">Productos disponibles</h3></center>
 											<div class="form-group col-xs-12 col-md-4">
@@ -45,80 +45,78 @@
 
 									</div>
 								</div>
-								</div>
-
-
+							</div>
 					</div>
 
 						<br>
-						<div class="">
-				<form  enctype="multipart/form-data" id="listaProductos" method="#">
-					<div class="col-xs-12 col-sm-12">
-						<div class="col-xs-12 col-sm-2">
-							<div class="radio">
-									<label>
-											<input checked value="Al contado" id="tipoVenta1" name="tipoVenta" type="radio"> Al contado
-									</label>
-							</div>
-						</div>
-						<div class="col-xs-12 col-sm-2">
-							<div class="radio">
-									<label>
-											<input value="A credito" id="tipoVenta2" name="tipoVenta" type="radio"> A credito
-									</label>
-							</div>
-						</div><br><br>
-						<div class="input-group col-xs-12 col-md-3" style="display:none" id="dp">
-						  <span class="input-group-addon">Dias plaso</span>
-						  <input type="text" class="form-control" placeholder="" name="limiteDias">
-						</div><br>
-					</div>
-							<div class="form-group">
-								<div class="col-xs-12 col-sm-4 ">
-
-									<div class="input-group">
-									  <span class="input-group-addon">Cliente</span>
-										<select class="form-control" id="cliente" name="cliente" size="150" title="Buscar cliente">
-											<option value="0">[.::::::::::::Buscar Cliente::::::::::::.]</option>
-										</select>
-
+					<div class="">
+						<form  enctype="multipart/form-data" id="listaProductos" method="#">
+							<div class="col-xs-12 col-sm-12">
+								<div class="col-xs-12 col-sm-2">
+									<div class="radio">
+											<label>
+													<input checked value="Al contado" id="tipoVenta1" name="tipoVenta" type="radio"> Al contado
+											</label>
 									</div>
 								</div>
-								<button class="btn btn-success" type="button" onclick="imprimir_agregar_cliente()">Agregar cliente <i class="fa fa-plus"></i></button><br><br>
-								<center>
-									<button type="button" class="btn btn-primary" onclick="guardarVenta()" name="button">Guardar Venta <i class="fa fa-save"></i></button>
-									<a href="<?=base_url()?>index.php/admin/vendedor" class="btn btn-danger">Cancelar Nota</a>
-								</center>
+								<div class="col-xs-12 col-sm-2">
+									<div class="radio">
+											<label>
+													<input value="A credito" id="tipoVenta2" name="tipoVenta" type="radio"> A credito
+											</label>
+									</div>
+								</div><br><br>
+								<div class="input-group col-xs-12 col-md-3" style="display:none" id="dp">
+								  <span class="input-group-addon">Dias plaso</span>
+								  <input type="text" class="form-control" placeholder="" name="limiteDias">
+								</div><br>
 							</div>
-							<div class="table-responsive">
-								<table class="table table-striped table-bordered">
-									<thead>
-										<tr>
-											<th>Producto</th>
-											<th>Detalle</th>
-											<th>Cantidad</th>
-											<th>Precio</th>
-											<th>total</th>
+									<div class="form-group">
+										<div class="col-xs-12 col-sm-4 ">
 
-										</tr>
-									</thead>
-									<tbody id="contenidoVenta">
-									</tbody>
-									<tfoot>
-										<tr>
-											<td></td>
-											<td></td>
-											<td></td>
-											<td>Total</td>
-											<td><input type="text" name="total" id="total" placeholder="total BS" class="form-control "> </td>
-										</tr>
-									</tfoot>
-								</table>
-							</div>
-				</form>
-						</div>
+											<div class="input-group">
+											  <span class="input-group-addon">Cliente</span>
+												<select class="form-control" id="cliente" name="cliente" size="150" title="Buscar cliente">
+													<option value="0">[.::::::::::::Buscar Cliente::::::::::::.]</option>
+												</select>
 
+											</div>
+										</div>
+										<button class="btn btn-success" type="button" onclick="imprimir_agregar_cliente()">Agregar cliente <i class="fa fa-plus"></i></button><br><br>
+										<center>
+											<button type="button" class="btn btn-primary" onclick="guardarVenta()" name="button">Guardar Venta <i class="fa fa-save"></i></button>
+											<a href="<?=base_url()?>index.php/admin/vendedor" class="btn btn-danger">Cancelar Nota</a>
+										</center>
+									</div>
+									<div class="table-responsive">
+										<table class="table table-striped table-bordered">
+											<thead>
+												<tr>
+													<th>Producto</th>
+													<th>Detalle</th>
+													<th>Cantidad</th>
+													<th>Precio</th>
+													<th>total</th>
+
+												</tr>
+											</thead>
+											<tbody id="contenidoVenta">
+											</tbody>
+											<tfoot>
+												<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td>Total</td>
+													<td><input type="text" name="total" id="total" placeholder="total BS" class="form-control "> </td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+						</form>
 					</div>
+
+				</div>
 
 				</div>
 			</div>

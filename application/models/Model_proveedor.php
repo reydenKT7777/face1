@@ -27,4 +27,16 @@ class Model_proveedor extends CI_Model {
 	{
 		$this->db->delete('proveedor', array('id' => $id));
 	}
+	public function listaProveedor($l)
+	{
+		$r = $this->db->query("select * from proveedor
+													where nombre_prov like '".$l."%'
+													or nombre_prov like '%".$l."%'
+													or nombre_prov like '%".$l."'
+													or nit like '".$l."%'
+													or nit like '%".$l."%'
+													or nit like '%".$l."'
+													and estado = 1");
+		return $r->result();
+	}
 }

@@ -57,7 +57,7 @@ class Controlador_personal extends CI_Controller {
 		$usuario = $this->input->post('usuario');
 		$password = $this->input->post('password');
 		$id_sucursal = $this->input->post('id_sucursal');
-		if ($password != "") {
+		if ($password == "") {
 			$data = array(
 				'ci' => $ci,
 				'nombres' => $nombres,

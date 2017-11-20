@@ -81,4 +81,15 @@ class Controlador_proveedor extends CI_Controller {
 		$data = array('estado' => 1 );
 		$this->model_proveedor->modificar_proveedor($id,$data);
 	}
+	public function buscarProveedor()
+	{
+		$n = $this->input->get("q");
+		//$this->load->model("sql");
+		$lista = $this->model_proveedor->listaProveedor($n);
+		//$r= $this->sql->lista();
+		$res = array('total_count' => "10",
+	 							 'incomplete_results' => false,
+							 	 'items' => $lista);
+		echo json_encode($res);
+	}
 }
