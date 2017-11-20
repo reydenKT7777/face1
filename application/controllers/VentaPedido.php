@@ -63,14 +63,65 @@ class VentaPedido extends CI_Controller{
     $this->model_nota_venta->agregar_datos($notaVenta);
     echo "<br><br><br><br><br>
           <center>
-            <button class='btn btn-success' class='close' data-dismiss='modal' aria-label='Close'>
+            <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>
               La venta fue realizada con exito <i class='fa fa-check'></i>
-            </button><br><br>
+            </a><br><br>
             <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".base64_encode($id_pedido)."' class='btn btn-info'>
               Imprimir reporte <i class='fa fa-file-pdf-o'></i>
             </a>
           </center>
           <br><br><br><br><br>";
   }
-
+  public function agregarVentaPedido()
+  {
+    $this->load->model('model_pedido_cli');
+    $id_pedido = $this->input->post("idPedido");
+    // Cambia de estado el peedido
+    $data  = array('estado' => 1 );
+    $this->model_pedido_cli->modificar_pedido_cli($id_pedido,$data);
+    // verifica el tipo de venta
+    $limiteDias = $this->input->post("limiteDias");
+    $total = $this->input->post("monto");
+    if ($limiteDias == "") {
+      $tipoVenta = "Al contado";
+    }
+    else {
+      $tipoVenta = "";
+    }
+    // version de tipo de venta Al contado
+    if ($tipoVenta == "Al contado") {
+      $notaVenta = array('nro_pedido' => $id_pedido,
+                        'id_personal' => $this->session->ci,
+                        'fecha_venta' => date("Y-m-d"),
+                        'monto_total' => $total,
+                        'tipo_venta' => $tipoVenta,
+                        'fecha_limite' => '0000-00-00'
+                      );
+    }
+    // version de tipo de venta A credito
+    else {
+      $limite = $this->input->post("limiteDias");
+      $fecha = date('Y-m-j');
+      $nuevafecha = strtotime ( '+'.$limite.' day' , strtotime ( $fecha ) ) ;
+      $nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+      $notaVenta = array('nro_pedido' => $id_pedido,
+                        'id_personal' => $this->session->ci,
+                        'fecha_venta' => date("Y-m-d"),
+                        'monto_total' => $total,
+                        'tipo_venta' => $tipoVenta,
+                        'fecha_limite' => $nuevafecha
+                      );
+    }
+    $this->model_nota_venta->agregar_datos($notaVenta);
+    echo "<br><br><br><br><br>
+          <center>
+            <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>
+              La venta fue realizada con exito <i class='fa fa-check'></i>
+            </a><br><br>
+            <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".base64_encode($id_pedido)."' class='btn btn-info'>
+              Imprimir reporte <i class='fa fa-file-pdf-o'></i>
+            </a>
+          </center>
+          <br><br><br><br><br>";
+  }
 }

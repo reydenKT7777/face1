@@ -75,9 +75,14 @@
 					</div>
 							<div class="form-group">
 								<div class="col-xs-12 col-sm-4 ">
-									<select class="form-control" id="cliente" name="cliente" size="150">
-										<option value="0">[.::::::::::::Buscar Cliente::::::::::::.]</option>
-									</select>
+
+									<div class="input-group">
+									  <span class="input-group-addon">Cliente</span>
+										<select class="form-control" id="cliente" name="cliente" size="150" title="Buscar cliente">
+											<option value="0">[.::::::::::::Buscar Cliente::::::::::::.]</option>
+										</select>
+
+									</div>
 								</div>
 								<button class="btn btn-success" type="button" onclick="imprimir_agregar_cliente()">Agregar cliente <i class="fa fa-plus"></i></button><br><br>
 								<center>
@@ -139,41 +144,23 @@
 							<div class="panel-body">
 								<div class="row">
 									<div class="col-md-3 col-xs-12">
-										<select class="" id="pedidos" >
-											<option value="0">[.::::::::Seleccione un pedido::::::::.]</option>
-										</select>
+										<div class="input-group">
+										  <span class="input-group-addon">Pedidos</span>
+											<select class="" id="pedidos" >
+												<option value="0">[.::::::::Seleccione un pedido::::::::.]</option>
+											</select>
+										</div>
 									</div>
 									<div class="col-md-6">
-										<button type="button" class="btn btn-success">Ver pedido</button>
+										<!--button type="button" class="btn btn-success">Ver pedido</button-->
 									</div>
 								</div>
 								<br>
 								<div class="row" id="infoCliente">
-									<div class="col-md-3">
-										<h1>nombre</h1>
-									</div>
-									<div class="col-md-9" id="pedidoCliente">
-										<table class="table">
-											<thead>
-												<tr>
-													<th>Producto</th>
-													<th>Detalle</th>
-													<th>Cantidad</th>
-													<th>Precio</th>
-													<th>Total</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>no se</td>
-													<td>ksdsfjsdfkdsk</td>
-													<td>100</td>
-													<td>200</td>
-													<td>234</td>
-												</tr>
-											</tbody>
-										</table>
-										<center><button type="button" class="btn btn-primary">Realizar venta <i class="fa fa-save"></i></button> </center>
+
+									<div class="col-md-12" id="pedidoCliente">
+
+
 									</div>
 								</div>
 							</div>
@@ -385,7 +372,7 @@ $.fn.select2.amd.require([
 		return markup;
 	}
 	function formatRepoSelectionPedido (repo) {
-		return repo.nombre_cliente || repo.text;
+		return repo.nombre_cliente  || repo.text;
 	}
 
 	$pedido.select2({
@@ -583,10 +570,117 @@ var guardarVenta = function () {
 }
 // Funciones de ver y guardar pedidos
 $('#pedidos').on('change', function() {
-	limpiarPedido();
+	//limpiarPedido();
+	var id = $('#pedidos').val();
+	verPedido(id);
 });
 var limpiarPedido = function () {
 	$('#infoCliente').empty();
 	$('#pedidoCliente').empty();
+}
+var verPedido = function (id) {
+	$.ajax({
+		url: base_url+'index.php/controlador_pedido_cli/verPedido',
+		type: 'POST',
+		dataType: 'json',
+		data: {id: id},
+		success:function (data) {
+			//$('.modal_verPedido').modal("show");
+			var html = "";
+			html += "<h1>"+data[0]["nombre"]+"</h1>";
+			html += "<h3>Fecha: "+data[0]["fecha_pedido"]+"</h3>";
+			//html += '<form class="listaProductos">';
+			html += '<input value="'+data[0]["monto"]+'" id="" name="" type="hidden" class="monto">';
+			html += '<div class="col-xs-12 col-sm-12">'+
+				'<div class="col-xs-12 col-sm-2">'+
+					'<div class="radio">'+
+							'<label>'+
+									'<input checked value="Al contado" id="" name="tv1" type="radio" class="tipoVenta1"> Al contado'+
+							'</label>'+
+					'</div>'+
+				'</div>'+
+				'<div class="col-xs-12 col-sm-2">'+
+					'<div class="radio">'+
+							'<label>'+
+									'<input value="A credito" id="" name="tv1" type="radio" class="tipoVenta2"> A credito'+
+							'</label>'+
+					'</div>'+
+				'</div><br><br>'+
+				'<div class="input-group col-xs-12 col-md-3 dp" style="display:none" id="dp">'+
+					'<span class="input-group-addon">Dias plaso</span>'+
+					'<input type="text" class="form-control limiteDias" placeholder="" name="">'+
+				'</div><br>'+
+			'</div>';
+			html += '<table class="table">'+
+				'<thead>'+
+					'<tr>'+
+						'<th>#</th>'+
+						'<th>Producto</th>'+
+						'<th>Descripcion</th>'+
+						'<th>P/U</th>'+
+						'<th>Cantidad</th>'+
+						'<th>Total</th>'+
+					'</tr>'+
+				'</thead>'+
+				'<tbody>';
+					for (var i = 0; i < data.length; i++) {
+						html += '<tr>'+
+							'<td>'+(i+1)+'</td>'+
+							'<td>'+data[i]["nombre_pro"]+" "+data[i]["marca"]+'</td>'+
+							'<td>'+data[i]["descripcion"]+'</td>'+
+							'<td>'+data[i]["precio"]+'</td>'+
+							'<td>'+data[i]["cantidad"]+'</td>'+
+							'<td>'+data[i]["total"]+'</td>'+
+						'</tr>';
+					}
+				html += '</tbody>'+
+				'<tfoot>'+
+					'<tr>'+
+						'<th></th>'+
+						'<th></th>'+
+						'<th></th>'+
+						'<th></th>'+
+						'<th></th>'+
+						'<th>'+data[0]["monto"]+'</th>'+
+					'</tr>'+
+				'</tfoot>'+
+			'</table>';
+			html += '<center><button type="button" class="btn btn-primary" onclick="guardarPedidoVenta()">Realizar venta <i class="fa fa-save"></i></button> </center>';
+			$('#pedidoCliente').empty();
+			$('#pedidoCliente').html(html);
+			$('.tipoVenta1').on('click',function() {
+				$('.dp').hide();
+			});
+			$('.tipoVenta2').on('click',function() {
+				$('.dp').show();
+			});
+		}
+	})
+	.done(function() {
+		console.log("success");
+	})
+	.fail(function() {
+		console.log("error");
+	})
+	.always(function() {
+		console.log("complete");
+	});
+
+}
+var guardarPedidoVenta = function () {
+	if (confirm("esta seguro de guardar como venta?")) {
+		var idPedido = $('#pedidos').val();
+		var limiteDias = $('.limiteDias').val();
+		var monto = $('.monto').val();
+		$.ajax({
+	  	  url: base_url+'index.php/ventaPedido/agregarVentaPedido',
+	      type: 'POST',
+	      data: {idPedido:idPedido,limiteDias:limiteDias,monto:monto},
+	      success: function(data){
+					$('.notificacionRespuesta').modal("show");
+					$('.respuesta').html(data);
+	      }
+	  	});
+	}
 }
 </script>
