@@ -132,7 +132,7 @@
 <script>
 var base_url = '<?=base_url()?>';
 var guardarNota = function () {
-	if (confirm("esta seguro de guardar venta?")) {
+	if (confirm("esta seguro de incrementar almacen?")) {
 		var fdata = new FormData($("#listaProductos")[0]);
 		$.ajax({
 	  	  url: base_url+'index.php/controlador_pedido_prov/agregar_datos',
@@ -380,8 +380,13 @@ var agergarALista = function () {
 				var html = "";
 				html +="<tr>"+
 									"<td>"+data.producto[0]["nombre_pro"]+"</td>"+
-									"<td>"+data.producto[0]["descripcion"]+" "+data.producto[0]["marca"]+"</td>"+
-									"<td>"+cantidad+"</td>"+
+									"<td>"+data.producto[0]["descripcion"]+" "+data.producto[0]["marca"]+"</td>";
+										for (var i = 0; i < data.Tunitario.length; i++) {
+											if (data.Tunitario[i]["id"] ==  data.producto[0]["id_tipo_unitario"]) {
+												var tunit = data.Tunitario[i]["nombre_tipo_u"];
+											}
+										}
+					html += "<td>"+cantidad+" "+tunit+"s</td>"+
 									"<td>"+data.producto[0]["precio"]+"</td>"+
 									"<td>"+total+"</td>"+
 									'<input type="hidden" name="producto[]" value="'+data.producto[0]["id"]+'">'+
@@ -390,6 +395,7 @@ var agergarALista = function () {
 								"</tr>";
 				$('#total').val(($('#total').val()*1) + (total*1));
 				$('#contenidoVenta').append(html);
+				$('#cantidadP').val("");
 			}
 		})
 		.done(function() {

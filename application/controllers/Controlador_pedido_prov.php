@@ -22,16 +22,24 @@ class Controlador_pedido_prov extends CI_Controller {
 		//$this->model_pedido_prov->agregar_datos($data);
 		// Añadir pedido al proveedor
 		// insertamos los datos de la nota o encabezado
-    $prov = $this->input->post("proveedor");
-    $monto = $this->input->post("monto");
-    $dataNotaPedido = array('id_proveedor' => $prov,
+		$nroPedidoMX = $this->model_pedido_prov->nro();
+		$nroPedido = $nroPedidoMX->max;
+		if ($nroPedido == null) {
+			$nroPedido = 1;
+		}
+		else {
+			$nroPedido = $nroPedido + 1;
+		}
+    //$prov = $this->input->post("id_proveedor");
+    //$monto = $this->input->post("monto");
+    $dataNotaPedido = array('id_proveedor' => $id_proveedor,
                             'fecha_pedido' =>  date("Y-m-d"),
-                            'nro_pedido' => "24",
-                            'monto_total' => $monto,
+                            'nro_pedido' => $nroPedido,
+                            'monto_total' => $monto_total,
                             'estado' => 0
                             );
     //$id = $this->almacenModel->agregar_datos($dataNotaPedido);
-		$this->model_pedido_prov->agregar_datos($dataNotaPedido);
+		$id = $this->model_pedido_prov->agregar_datos($dataNotaPedido);
     $p = $this->input->post("producto");
     $c = $this->input->post("cantidad");
     $pc = $this->input->post("precio");
@@ -48,10 +56,10 @@ class Controlador_pedido_prov extends CI_Controller {
 
 		echo "<br><br><br><br><br>
           <center>
-            <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>
-              La venta fue realizada con exito <i class='fa fa-check'></i>
+            <a href='".base_url()."index.php/admin/almacenero' class='btn btn-success'>
+              Los productos fueron registrados con exito a almacenes <i class='fa fa-check'></i>
             </a><br><br>
-            <a href='".base_url()."index.php/controlador_pedido_prov/reportePDF?id=".base64_encode($id_pedido)."' class='btn btn-info'>
+            <a href='".base_url()."index.php/controlador_pedido_prov/reportePDF?id=".base64_encode($id)."' class='btn btn-info'>
               Imprimir reporte <i class='fa fa-file-pdf-o'></i>
             </a>
           </center>

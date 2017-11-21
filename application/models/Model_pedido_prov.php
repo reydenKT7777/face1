@@ -10,6 +10,7 @@ class Model_pedido_prov extends CI_Model {
 	{
 		$this->db->set($data);
 		$this->db->insert('pedido_prov');
+		return $this->db->insert_id();
 	}
 	public function modificar_pedido_prov($id,$data)
 	{
@@ -32,4 +33,9 @@ class Model_pedido_prov extends CI_Model {
     $this->db->set($data);
 		$this->db->insert('detalle_pedido');
   }
+	public function nro($value='')
+	{
+		$r = $this->db->query("select max(`nro_pedido`) as max from pedido_prov");
+		return $r->row();
+	}
 }
