@@ -5,6 +5,7 @@ class Controlador_pedido_prov extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('model_pedido_prov');
+		$this->load->model('model_producto');
 	}
 	public function index()
 	{
@@ -52,6 +53,8 @@ class Controlador_pedido_prov extends CI_Controller {
                               'estado' => 0
                             );
       $this->model_pedido_prov->agregarProductos($productoLista);
+			$this->model_producto->incrementar($p[$i],$c[$i]);
+			$this->model_producto->historialIn($p[$i],$c[$i]);
     }
 
 		echo "<br><br><br><br><br>

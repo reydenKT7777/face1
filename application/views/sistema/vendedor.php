@@ -90,7 +90,7 @@
 									</div>
 									<div class="table-responsive">
 										<table class="table table-striped table-bordered">
-											<thead>
+											<thead style="background-color:#638cbc; color:#fff">
 												<tr>
 													<th>Producto</th>
 													<th>Detalle</th>
@@ -102,7 +102,7 @@
 											</thead>
 											<tbody id="contenidoVenta">
 											</tbody>
-											<tfoot>
+											<tfoot style="background-color:#638cbc; color:#fff">
 												<tr>
 													<td></td>
 													<td></td>
@@ -450,8 +450,13 @@ var agergarALista = function () {
 				var html = "";
 				html +="<tr>"+
 									"<td>"+data.producto[0]["nombre_pro"]+"</td>"+
-									"<td>"+data.producto[0]["descripcion"]+" "+data.producto[0]["marca"]+"</td>"+
-									"<td>"+cantidad+"</td>"+
+									"<td>"+data.producto[0]["descripcion"]+" "+data.producto[0]["marca"]+"</td>";
+									for (var i = 0; i < data.Tunitario.length; i++) {
+										if (data.Tunitario[i]["id"] ==  data.producto[0]["id_tipo_unitario"]) {
+											var tunit = data.Tunitario[i]["nombre_tipo_u"];
+										}
+									}
+					html += "<td>"+cantidad+" "+tunit+"s</td>"+
 									"<td>"+data.producto[0]["precio"]+"</td>"+
 									"<td>"+total+"</td>"+
 									'<input type="hidden" name="id_producto[]" value="'+data.producto[0]["id"]+'">'+
@@ -460,6 +465,7 @@ var agergarALista = function () {
 								"</tr>";
 				$('#total').val(($('#total').val()*1) + (total*1));
 				$('#contenidoVenta').append(html);
+				$('#cantidadP').val("");
 			}
 		})
 		.done(function() {

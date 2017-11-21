@@ -46,4 +46,49 @@ class Model_producto extends CI_Model {
 													);
 		return $r->result();
 	}
+	public function incrementar($id,$cantidad)
+	{
+		$r = $this->buscar_producto($id);
+		foreach ($r as $row) {
+			$stock = $row->stock;
+		}
+		$stock = $stock + $cantidad;
+		$data = array('stock' => $stock );
+		$this->modificar_producto($id,$data);
+	}
+	public function decrementar($id,$cantidad)
+	{
+		$verificar = false;
+		$r = $this->buscar_producto($id);
+		foreach ($r as $row) {
+			$stock = $row->stock;
+		}
+		if ($stock >= $cantidad) {
+			$stock = $stock - $cantidad;
+			$data = array('stock' => $stock );
+			$this->modificar_producto($id,$data);
+			$verificar = true;
+		}
+		return $verificar;
+	}
+	public function historialIn($id,$cantidad)
+	{
+		$data  = array('id_producto' => $id,
+									'cantidad' => $cantidad,
+									'fecha_ingreso'=> date("Y-m-d"),
+									'hora_ingreso' => date("G:i:s"),
+									'id_personal' => $this->session->ci
+	 									);
+		$this->db->insert('historial_ingreso_producto', $data);
+	}
+	public function historialSal($id,$cantidad)
+	{
+		$data  = array('id_producto' => $id,
+									'cantidad' => $cantidad,
+									'fecha_egreso'=> date("Y-m-d"),
+									'hora_egreso' => date("G:i:s"),
+									'id_personal' => $this->session->ci
+	 									);
+		$this->db->insert('historial_egreso_producto', $data);
+	}
 }

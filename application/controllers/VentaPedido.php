@@ -9,6 +9,7 @@ class VentaPedido extends CI_Controller{
     $this->load->model("model_pedido_cli");
     $this->load->model("model_nota_venta");
     $this->load->model("model_detalle_pedido_cli");
+    $this->load->model("model_producto");
   }
 
   public function agregarVentaDirecta()
@@ -28,7 +29,6 @@ class VentaPedido extends CI_Controller{
                     );
     $id_pedido = $this->model_pedido_cli->agregar_datos($pedidoCli);
     for ($i=0; $i < count($id_producto) ; $i++) {
-
       $detalle = array('nro_pedido' => $id_pedido,
                         'id_producto' => $id_producto[$i],
                         'cantidad' => $cantidadP[$i],
@@ -37,6 +37,8 @@ class VentaPedido extends CI_Controller{
                       );
 
       $this->model_detalle_pedido_cli->agregar_datos($detalle);
+      $this->model_producto->decrementar($id_producto[$i],$cantidadP[$i]);
+      $this->model_producto->historialSal($id_producto[$i],$cantidadP[$i]);
     }
     if ($tipoVenta == "Al contado") {
       $notaVenta = array('nro_pedido' => $id_pedido,
@@ -44,7 +46,8 @@ class VentaPedido extends CI_Controller{
                         'fecha_venta' => date("Y-m-d"),
                         'monto_total' => $total,
                         'tipo_venta' => $tipoVenta,
-                        'fecha_limite' => '0000-00-00'
+                        'fecha_limite' => '0000-00-00',
+                        'montoPendiente' => $total
                       );
     }
     else {
@@ -57,7 +60,8 @@ class VentaPedido extends CI_Controller{
                         'fecha_venta' => date("Y-m-d"),
                         'monto_total' => $total,
                         'tipo_venta' => $tipoVenta,
-                        'fecha_limite' => $nuevafecha
+                        'fecha_limite' => $nuevafecha,
+                        'montoPendiente' => $total
                       );
     }
     $this->model_nota_venta->agregar_datos($notaVenta);
@@ -95,7 +99,8 @@ class VentaPedido extends CI_Controller{
                         'fecha_venta' => date("Y-m-d"),
                         'monto_total' => $total,
                         'tipo_venta' => $tipoVenta,
-                        'fecha_limite' => '0000-00-00'
+                        'fecha_limite' => '0000-00-00',
+                        'montoPendiente' => $total
                       );
     }
     // version de tipo de venta A credito
@@ -109,7 +114,8 @@ class VentaPedido extends CI_Controller{
                         'fecha_venta' => date("Y-m-d"),
                         'monto_total' => $total,
                         'tipo_venta' => $tipoVenta,
-                        'fecha_limite' => $nuevafecha
+                        'fecha_limite' => $nuevafecha,
+                        'montoPendiente' => $total
                       );
     }
     $this->model_nota_venta->agregar_datos($notaVenta);
