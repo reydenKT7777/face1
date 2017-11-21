@@ -21,10 +21,34 @@ class Model_nota_venta extends CI_Model {
 		$query = $this->db->select('*')
                 ->where('id', $id)
                 ->get('nota_venta');
+								//$query = $this->db->select('*')
 		return $query->result();
 	}
 	public function eliminar_datos($id)
 	{
 		$this->db->delete('nota_venta', array('id' => $id));
+	}
+	public function Buscar_notas_ventas($l)
+	{
+		/*if ($l == "") {*/
+			$r = $this->db->query("select n.*,c.nombre_cliente,c.nit
+														from nota_venta n, pedido_cli p, cliente c
+														where n.montoPendiente > 0 and
+														n.nro_pedido = p.nro_pedido and
+														c.id = p.id_cliente
+														");
+		/*}
+		else {
+			$r = $this->db->query("select n.*,c.nombre_cliente,c.nit
+														from nota_venta n, pedido_cli p, cliente c
+														where n.montoPendiente > 0 and
+														n.nro_pedido = p.nro_pedido and
+														c.id = p.id_cliente and
+														(c.nit = '%$l' or c.nit = '%$l%' or nit = '$l%') or
+														(c.nombre_cliente like '%$l' or c.nombre_cliente like '%$l%' or c.nombre_cliente like '$l%') or
+														(n.fecha_venta = '%$l' or n.fecha_venta = '%$l%' or n.fecha_venta = '$l%')
+														");
+		}*/
+	 return $r->result();
 	}
 }

@@ -15,6 +15,9 @@
 	<link href="<?=base_url()?>assets/fonts/css/font-awesome.min.css" rel="stylesheet">
 	<link href="<?=base_url()?>assets/css/select2/select2.min.css" type="text/css" rel="stylesheet" />
 	<link href="<?=base_url()?>assets/css/select2/s2-docs.css" type="text/css" rel="stylesheet" >
+	<link href="<?=base_url()?>assets/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
+	<link href="<?=base_url()?>assets/css/datatables/jquery.dataTables.css" rel="stylesheet">
+
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -26,6 +29,8 @@
 	<script type="text/javascript" src="<?=base_url()?>assets/js/select2/prettify.min.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/select2/select2.full.js"></script>
 	<script type="text/javascript" src="<?=base_url()?>assets/js/select2/es.js"></script>
+	<script src="<?=base_url()?>assets/js/datatables/jquery.dataTables.js"></script>
+	<script src="<?=base_url()?>assets/js/datatables/dataTables.responsive.min.js"></script>
 </head>
 <body>
 
