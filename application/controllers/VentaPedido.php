@@ -137,4 +137,20 @@ class VentaPedido extends CI_Controller{
     $r = $this->model_nota_venta->Buscar_notas_ventas($cad);
     echo json_encode($r);
   }
+  public function verCuentas()
+  {
+    $id = $this->input->post("id");
+    $nota = $this->model_nota_venta->Buscar_notaVenta($id);
+    $pagos = $this->model_nota_venta->Buscar_PagosVenta($id);
+    $data = array('nota' => $nota, 'pagos' => $pagos);
+    echo json_encode($data);
+  }
+  public function pagar()
+  {
+    $id = $this->input->post('idNota');
+    $cantidad = $this->input->post('cantidad');
+    $pagar = $this->model_nota_venta->pagar($id,$cantidad);
+    $data = array('resp' => $pagar );
+    echo json_encode($data);
+  }
 }

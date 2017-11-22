@@ -51,4 +51,54 @@ class Model_nota_venta extends CI_Model {
 		}*/
 	 return $r->result();
 	}
+	public function Buscar_notaVenta($id)
+	{
+
+			$r = $this->db->query("select n.*,c.nombre_cliente,c.nit
+														from nota_venta n, pedido_cli p, cliente c
+														where n.montoPendiente > 0 and
+														n.nro_pedido = p.nro_pedido and
+														c.id = p.id_cliente and
+														n.id = $id
+														");
+	 return $r->result();
+	}
+	public function Buscar_PagosVenta($id)
+	{
+		$r = $this->db->query("select *
+													from pago_nota_venta
+													where
+													id_nota_venta = $id
+													");
+ 		return $r->result();
+	}
+	public function pagoNota($data)
+	{
+		$this->db->set($data);
+		$this->db->insert('pago_nota_venta');
+	}
+	public function pagar($idNota,$cantidad)
+	{
+		$nota = $this->Buscar_notaVenta($idNota);
+		$very = false;
+		foreach ($nota as $row) {
+			if ($row->montoPendiente >= $cantidad) {
+				$pendiente = $row->montoPendiente;
+				$total = $pendiente - $cantidad;
+				$very = true;
+				$pagoNota = array('id_nota_venta' => $idNota,
+													'fecha_pago' => date("Y-m-d"),
+													'id_personal' => $this->session->ci,
+													'monto' => $cantidad,
+													'monto_pendiente' => $total
+			 										);
+				$this->pagoNota($pagoNota);
+			}
+		}
+		if ($very == true) {
+			$data = array('montoPendiente' => $total);
+			$this->modificar_nota_venta($idNota,$data);
+		}
+		return $very;
+	}
 }

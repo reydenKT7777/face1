@@ -1,5 +1,5 @@
 <div class="container-fluid features" id="section2">
-	<div class="container">
+	<div class="">
 		<div class="row">
 			<div class="col-md-12">
 				<h2 class="text-center features-text">Cajero</h2>
@@ -60,6 +60,7 @@
 		</div>
 	</div>
 </div>
+<!--===================Modal=========================================-->
 <div class="modal fade" id="cuentaPersonal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
@@ -69,26 +70,25 @@
       </div>
       <div class="modal-body">
         <div class="row">
+
+					<div class="col-md-9" id="listaPagos">
+
+					</div>
 					<div class="col-md-3">
 						<div class="input-group">
 		          <span class="input-group-addon">Monto</span>
 		          <input type="text" class="form-control" id="montoPago" placeholder="">
 		          <span class="input-group-addon"><i class="fa fa-dollar"></i></span>
 		        </div><br>
-						<button type="button" class="btn btn-success btn-block">Registrar pago <i class="fa fa-save"></i></button>
+						<button type="button" class="btn btn-success btn-block" onclick="pagar()">Registrar pago <i class="fa fa-save"></i></button>
 	        </div>
-					<div class="col-md-9">
-
-					</div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Ver</button>
       </div>
     </div>
   </div>
 </div>
+<!--===================End Modal=========================================-->
+
 <script>
 var base_url = "<?=base_url()?>";
 $(document).ready(function() {
@@ -141,8 +141,8 @@ $(document).ready(function() {
 															'<td>'+data[i]["fecha_venta"]+'</td>'+
 															'<td>'+data[i]["fecha_limite"]+'</td>'+
 															'<td>'+data[i]["tipo_venta"]+'</td>'+
-															'<td>'+data[i]["monto_total"]+'</td>'+
-															'<td>'+data[i]["montoPendiente"]+'</td>';
+															'<td class="success">'+data[i]["monto_total"]+'</td>'+
+															'<td class="warning">'+data[i]["montoPendiente"]+'</td>';
 															html += '<td>';
 															html += '<button type="button" class="btn btn-success btn-xs" title="Ver Cuentas" onclick="verCuentas('+data[i]["nro_pedido"]+')"><i class="fa fa-eye"></i></button>';
 															html += '</td>';
@@ -194,7 +194,80 @@ $(document).ready(function() {
 
 		}
 	}
-	var verCuentas = function () {
+	var idd = 0;
+	var verCuentas = function (id) {
+		idd = id;
 		$('#cuentaPersonal').modal("show");
+		FajaxMostrarCuentas(id);
+	}
+	var FajaxMostrarCuentas = function (id) {
+		$.ajax({
+			url: base_url+'index.php/ventaPedido/verCuentas',
+			type: 'POST',
+			dataType: 'json',
+			data: {id: id},
+			success:function (data) {
+				var html = "";
+				for (var i = 0; i < data.nota.length; i++) {
+
+					html += '<div class="col-md-6"><h4>Nro nota: '+data.nota[i]["nro_pedido"]+'</h4>'+
+					'<h4>Cliente: '+data.nota[i]["nombre_cliente"]+'</h4>'+
+					'<h4>Fecha venta: '+data.nota[i]["fecha_venta"]+'</h4></div>'+
+					'<div class="col-md-6"><h4 style="background-color:#6de84d">Monto total: '+
+					data.nota[i]["monto_total"]+'</h4>';
+					html += '<h4 style="background-color:#a0a7e3">Pendiente: '+data.nota[i]["montoPendiente"]+'</h4></div>';
+				}
+				html += '<table class="table table-striped">'+
+						'<thead>'+
+							'<tr>'+
+								'<th>Fecha Pago</th>'+
+								'<th>Monto pagado</th>'+
+								'<th>Monto pendiente</th>'+
+							'</tr>'+
+						'</thead>'+
+						'<tbody>';
+							for (var i = 0; i < data.pagos.length; i++) {
+								html += "<tr>";
+								html += "<td>"+data.pagos[i]["fecha_pago"]+"</td>";
+								html += "<td>"+data.pagos[i]["monto"]+"</td>";
+								html += "<td>"+data.pagos[i]["monto_pendiente"]+"</td>";
+								html += "</tr>";
+							}
+						html += '</tbody>'+
+				'</table>';
+				$('#listaPagos').empty();
+				$('#listaPagos').html(html);
+			}
+		})
+		.done(function() {
+			console.log("success");
+		})
+		.fail(function() {
+			console.log("error");
+		})
+		.always(function() {
+			console.log("complete");
+		});
+
+	}
+	var pagar = function () {
+		var cantidad = $('#montoPago').val();
+		$.ajax({
+			url: base_url+'index.php/ventaPedido/pagar',
+			type: 'POST',
+			dataType: 'json',
+			data: {idNota:idd,cantidad:cantidad},
+			success:function (data) {
+				if (data.resp == true) {
+					FajaxMostrarCuentas(idd);
+					listar_notaV();
+				}
+				else {
+					alert("El monto es mayor a la deuda pendiente!!");
+				}
+				$('#montoPago').val("");
+			}
+		});
+
 	}
 </script>
