@@ -99,6 +99,7 @@ $(document).ready(function() {
 			$('#ventas').show();
 			$('#caja').hide();
 			$('#trans').hide();
+			listar_notaV();
 		}
 		else if (id == 2) {
 			$('#ventas').hide();

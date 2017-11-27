@@ -43,18 +43,18 @@
                 <div class="left_col scroll-view">
 
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="index.html" class="site_title"><i class="fa fa-paw"></i> <span>Gentellela Alela!</span></a>
+                        <a href="index.html" class="site_title"><i class="fa fa-home"></i> <span><?=$this->session->sucursal?></span></a>
                     </div>
                     <div class="clearfix"></div>
 
                     <!-- menu prile quick info -->
                     <div class="profile">
                         <div class="profile_pic">
-                            <img src="images/img.jpg" alt="..." class="img-circle profile_img">
+                            <img src="<?=base_url()?>assets/images/user.png" alt="..." class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
-                            <span>Welcome,</span>
-                            <h2>Anthony Fernando</h2>
+                            <span>Bienvenido,</span>
+                            <h2><?=$this->session->nombres?> <?=$this->session->apellidos?></h2>
                         </div>
                     </div>
                     <!-- /menu prile quick info -->
@@ -69,6 +69,7 @@
                             <ul class="nav side-menu">
                                 <li><a><i class="fa fa-home"></i> Sucursales <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu" style="display: none">
+																				<li><a href="<?=base_url()?>index.php/admin/administrador">Inicio</a></li>
                                         <li><a href="<?=base_url()?>index.php/controlador_sucursal">Sucursal</a>
                                         </li>
 
@@ -96,25 +97,11 @@
 																				<li><a href="<?=base_url()?>index.php/controlador_producto">Producto</a></li>
                                     </ul>
                                 </li>
-                                <li><a><i class="fa fa-desktop"></i> UI Elements <span class="fa fa-chevron-down"></span></a>
+                                <li><a><i class="fa fa-shopping-cart"></i> Ventas <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu" style="display: none">
-                                        <li><a href="general_elements.html">General Elements</a>
+                                        <li><a href="<?=base_url()?>index.php/controlador_cliente">Clientes</a>
                                         </li>
-                                        <li><a href="media_gallery.html">Media Gallery</a>
-                                        </li>
-                                        <li><a href="typography.html">Typography</a>
-                                        </li>
-                                        <li><a href="icons.html">Icons</a>
-                                        </li>
-                                        <li><a href="glyphicons.html">Glyphicons</a>
-                                        </li>
-                                        <li><a href="widgets.html">Widgets</a>
-                                        </li>
-                                        <li><a href="invoice.html">Invoice</a>
-                                        </li>
-                                        <li><a href="inbox.html">Inbox</a>
-                                        </li>
-                                        <li><a href="calender.html">Calender</a>
+                                        <li><a href="<?=base_url()?>index.php/ventaPedido/reportesVenta">Ventas</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -215,99 +202,14 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="images/img.jpg" alt="">John Doe
+                                    <img src="<?=base_url()?>assets/images/user.png" alt=""><?=$this->session->nombres?> <?=$this->session->apellidos?>
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
-                                    <li><a href="javascript:;">  Profile</a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">
-                                            <span class="badge bg-red pull-right">50%</span>
-                                            <span>Settings</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:;">Help</a>
-                                    </li>
                                     <li><a href="<?=base_url()?>index.php/admin/logout"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
                                     </li>
                                 </ul>
                             </li>
-
-                            <li role="presentation" class="dropdown">
-                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-envelope-o"></i>
-                                    <span class="badge bg-green">6</span>
-                                </a>
-                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list animated fadeInDown" role="menu">
-                                    <li>
-                                        <a>
-                                            <span class="image">
-                                        <img src="images/img.jpg" alt="Profile Image" />
-                                    </span>
-                                            <span>
-                                        <span>John Smith</span>
-                                            <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image">
-                                        <img src="images/img.jpg" alt="Profile Image" />
-                                    </span>
-                                            <span>
-                                        <span>John Smith</span>
-                                            <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image">
-                                        <img src="images/img.jpg" alt="Profile Image" />
-                                    </span>
-                                            <span>
-                                        <span>John Smith</span>
-                                            <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image">
-                                        <img src="images/img.jpg" alt="Profile Image" />
-                                    </span>
-                                            <span>
-                                        <span>John Smith</span>
-                                            <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                        Film festivals used to be do-or-die moments for movie makers. They were where...
-                                    </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="text-center">
-                                            <a>
-                                                <strong><a href="inbox.html">See All Alerts</strong>
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </li>
-
                         </ul>
                     </nav>
                 </div>
@@ -347,6 +249,10 @@
  <script src="<?=base_url()?>assets/js/bootstrap.min.js"></script>
  <script src="<?=base_url()?>assets/js/custom.js"></script>
  <script src="<?=base_url()?>assets/js/numeric/jquery.numeric.min.js"></script>
-
+ <!-- chart js -->
+ <script src="<?=base_url()?>assets/js/chartjs/chart.min.js"></script>
+ <!-- bootstrap progress js -->
+ <script src="<?=base_url()?>assets/js/progressbar/bootstrap-progressbar.min.js"></script>
+ <script src="<?=base_url()?>assets/js/nicescroll/jquery.nicescroll.min.js"></script>
 </body>
 </html>

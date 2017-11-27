@@ -21,6 +21,11 @@ class Controlador_producto extends CI_Controller {
 		$r = $this->model_producto->listar_producto($id);
 		echo json_encode($r);
 	}
+	public function getProducto()
+	{
+		$r = $this->model_producto->getProducto();
+		echo json_encode($r);
+	}
 	public function addDatos()
 	{
 		$tipoP = $this->model_tipo_producto->listar_tipo_producto();

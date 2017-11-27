@@ -15,6 +15,11 @@ class Model_producto extends CI_Model {
 													);
 		return $query->result();
 	}
+	public function getProducto()
+	{
+		$r = $this->db->query("select * from producto where estadoPro = 1");
+		return $r->result();
+	}
 	public function agregar_datos($data)
 	{
 		$this->db->set($data);

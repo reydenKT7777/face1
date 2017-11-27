@@ -8,7 +8,9 @@ class Controlador_cliente extends CI_Controller {
 	}
 	public function index()
 	{
-		$this->load->view('cliente_view');
+		//$this->load->view('cliente_view');
+		$data["vista"] = 'administrador/cliente_view';
+		$this->load->view('frontend/main_admin',$data);
 	}
 	public function listar_cliente()
 	{

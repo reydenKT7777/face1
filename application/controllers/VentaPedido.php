@@ -153,4 +153,9 @@ class VentaPedido extends CI_Controller{
     $data = array('resp' => $pagar );
     echo json_encode($data);
   }
+  public function reportesVenta()
+  {
+    $data["vista"] = 'administrador/reportesVentas';
+		$this->load->view('frontend/main_admin',$data);
+  }
 }
