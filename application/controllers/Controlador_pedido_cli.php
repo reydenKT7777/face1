@@ -7,6 +7,7 @@ class Controlador_pedido_cli extends CI_Controller {
 		$this->load->model('model_pedido_cli');
     $this->load->model("model_nota_venta");
     $this->load->model("model_detalle_pedido_cli");
+		$this->load->model("model_producto");
 	}
 	public function index()
 	{
@@ -20,7 +21,8 @@ class Controlador_pedido_cli extends CI_Controller {
 		//$r= $this->sql->lista();
 		$res = array('total_count' => "10",
 	 							 'incomplete_results' => false,
-							 	 'items' => $lista);
+							 	 'items' => $lista,
+							 );
 		echo json_encode($res);
 	}
 	public function listar_pedido_cli()
@@ -96,8 +98,9 @@ class Controlador_pedido_cli extends CI_Controller {
                       'estado' => 0
                     );
     $id_pedido = $this->model_pedido_cli->agregar_datos($pedidoCli);
+
     for ($i=0; $i < count($id_producto) ; $i++) {
-      $detalle = array('nro_pedido' => $id_pedido,
+			$detalle = array('nro_pedido' => $id_pedido,
                         'id_producto' => $id_producto[$i],
                         'cantidad' => $cantidadP[$i],
                         'total' => $totalPrecio[$i],
@@ -113,6 +116,8 @@ class Controlador_pedido_cli extends CI_Controller {
 	{
 		$id = $this->input->post("id");
 		$r = $this->model_pedido_cli->verPedido($id);
-		echo json_encode($r);
+		$producto = $this->model_producto->getProducto();
+		$data = array('pedido' => $r, 'producto' => $producto );
+		echo json_encode($data);
 	}
 }

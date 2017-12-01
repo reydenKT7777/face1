@@ -12,7 +12,7 @@
 					<div class="col-xs-6 col-sm-6">
 						<button class="btn btn-info btn-block" id="npp" type="button">Pedidos</button>
 					</div>
-	    </div>
+	    	</div>
 		</center>
 		<div class="col-md-12 col-sm-12 col-xs-12 work-space notaVenta" id="" style="">
 			<div class="col-xs-12 col-sm-12 placeholder">
@@ -140,27 +140,29 @@
 								<center><h1 class="panel-title">Pedidos</h1></center>
 							</div>
 							<div class="panel-body">
-								<div class="row">
-									<div class="col-md-3 col-xs-12">
-										<div class="input-group">
-										  <span class="input-group-addon">Pedidos</span>
-											<select class="" id="pedidos" >
-												<option value="0">[.::::::::Seleccione un pedido::::::::.]</option>
-											</select>
+								<form class="" enctype="multipart/form-data" id="formPedido">
+									<div class="row">
+										<div class="col-md-3 col-xs-12">
+											<div class="input-group">
+											  <span class="input-group-addon">Pedidos</span>
+												<select class="" id="pedidos" name="pedidos">
+													<option value="0">[.::::::::Seleccione un pedido::::::::.]</option>
+												</select>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<!--button type="button" class="btn btn-success">Ver pedido</button-->
 										</div>
 									</div>
-									<div class="col-md-6">
-										<!--button type="button" class="btn btn-success">Ver pedido</button-->
+									<br>
+									<div class="row" id="infoCliente">
+
+										<div class="col-md-12" id="pedidoCliente">
+
+
+										</div>
 									</div>
-								</div>
-								<br>
-								<div class="row" id="infoCliente">
-
-									<div class="col-md-12" id="pedidoCliente">
-
-
-									</div>
-								</div>
+								</form>
 							</div>
 						</div>
 					</div>
@@ -591,28 +593,28 @@ var verPedido = function (id) {
 		success:function (data) {
 			//$('.modal_verPedido').modal("show");
 			var html = "";
-			html += "<h1>"+data[0]["nombre"]+"</h1>";
-			html += "<h3>Fecha: "+data[0]["fecha_pedido"]+"</h3>";
+			html += "<h1>"+data.pedido[0]["nombre"]+"</h1>";
+			html += "<h3>Fecha: "+data.pedido[0]["fecha_pedido"]+"</h3>";
 			//html += '<form class="listaProductos">';
-			html += '<input value="'+data[0]["monto"]+'" id="" name="" type="hidden" class="monto">';
+			html += '<input value="'+data.pedido[0]["monto"]+'" id="" name="" type="hidden" class="monto">';
 			html += '<div class="col-xs-12 col-sm-12">'+
 				'<div class="col-xs-12 col-sm-2">'+
 					'<div class="radio">'+
 							'<label>'+
-									'<input checked value="Al contado" id="" name="tv1" type="radio" class="tipoVenta1"> Al contado'+
+									'<input checked value="Al contado" id="" name="v1" type="radio" class="tipoVenta1"> Al contado'+
 							'</label>'+
 					'</div>'+
 				'</div>'+
 				'<div class="col-xs-12 col-sm-2">'+
 					'<div class="radio">'+
 							'<label>'+
-									'<input value="A credito" id="" name="tv1" type="radio" class="tipoVenta2"> A credito'+
+									'<input value="A credito" id="" name="v1" type="radio" class="tipoVenta2"> A credito'+
 							'</label>'+
 					'</div>'+
 				'</div><br><br>'+
 				'<div class="input-group col-xs-12 col-md-3 dp" style="display:none" id="dp">'+
 					'<span class="input-group-addon">Dias plaso</span>'+
-					'<input type="text" class="form-control limiteDias" placeholder="" name="">'+
+					'<input type="text" class="form-control limiteDias" placeholder="" name="limiteDias">'+
 				'</div><br>'+
 			'</div>';
 			html += '<table class="table">'+
@@ -627,15 +629,35 @@ var verPedido = function (id) {
 					'</tr>'+
 				'</thead>'+
 				'<tbody>';
-					for (var i = 0; i < data.length; i++) {
-						html += '<tr>'+
-							'<td>'+(i+1)+'</td>'+
-							'<td>'+data[i]["nombre_pro"]+" "+data[i]["marca"]+'</td>'+
-							'<td>'+data[i]["descripcion"]+'</td>'+
-							'<td>'+data[i]["precio"]+'</td>'+
-							'<td>'+data[i]["cantidad"]+'</td>'+
-							'<td>'+data[i]["total"]+'</td>'+
-						'</tr>';
+					for (var i = 0; i < data.pedido.length; i++) {
+						var stock = 0;
+						for (var j = 0; j < data.producto.length; j++) {
+							if (data.producto[j]["id"] == data.pedido[i]["id_producto"]) {
+								stock = data.producto[j]["stock"];
+							}
+						}
+						if (stock < (data.pedido[i]["cantidad"] * 1)) {
+							html += '<tr>'+
+								'<td><input type="hidden" name="id_detalle[]" value="'+data.pedido[i]["idDetalle"]+'">'+(i+1)+'</td>'+
+								'<td><input type="hidden" name="id_producoPet[]" value="'+data.pedido[i]["id_producto"]+'">'+data.pedido[i]["nombre_pro"]+" "+data.pedido[i]["marca"]+'</td>'+
+								'<td>'+data.pedido[i]["descripcion"]+'</td>'+
+								'<td><input id="pre'+i+'" type="text" name="precioPed[]" class="form-control" value="'+data.pedido[i]["precio"]+'" readonly=""></td>'+
+								'<td class="danger"><input id="can'+i+'" type="text" name="cantidadPed[]" onkeyup="calcular('+i+')" class="form-control" value="'+stock+'" >Solo existe '+stock+' de '+data.pedido[i]["cantidad"]+'</td>';
+								var tt = (data.pedido[i]["precio"] * 1) * (stock * 1);
+								html += '<td><input id="tot'+i+'" type="text" name="totalPed[]" class="form-control" value="'+tt+'" readonly=""></td>'+
+							'</tr>';
+						}
+						else
+						{
+							html += '<tr>'+
+								'<td><input type="hidden" name="id_detalle[]" value="'+data.pedido[i]["idDetalle"]+'">'+(i+1)+'</td>'+
+								'<td><input type="hidden" name="id_producoPet[]" value="'+data.pedido[i]["id_producto"]+'">'+data.pedido[i]["nombre_pro"]+" "+data.pedido[i]["marca"]+'</td>'+
+								'<td>'+data.pedido[i]["descripcion"]+'</td>'+
+								'<td><input id="pre'+i+'" type="text" name="precioPed[]" class="form-control" value="'+data.pedido[i]["precio"]+'" readonly=""></td>'+
+								'<td><input id="can'+i+'" type="text" name="cantidadPed[]" onkeyup="calcular('+i+')" class="form-control" value="'+data.pedido[i]["cantidad"]+'"></td>'+
+								'<td><input id="tot'+i+'" type="text" name="totalPed[]" class="form-control" value="'+data.pedido[i]["total"]+'" readonly=""></td>'+
+							'</tr>';
+						}
 					}
 				html += '</tbody>'+
 				'<tfoot>'+
@@ -645,13 +667,14 @@ var verPedido = function (id) {
 						'<th></th>'+
 						'<th></th>'+
 						'<th></th>'+
-						'<th>'+data[0]["monto"]+'</th>'+
+						'<th><input type="text" name="totalesPed" id="totalesPed" class="form-control" value="'+data.pedido[0]["monto"]+'"></th>'+
 					'</tr>'+
 				'</tfoot>'+
 			'</table>';
 			html += '<center><button type="button" class="btn btn-primary" onclick="guardarPedidoVenta()">Realizar venta <i class="fa fa-save"></i></button> </center>';
 			$('#pedidoCliente').empty();
 			$('#pedidoCliente').html(html);
+			calcularTotales();
 			$('.tipoVenta1').on('click',function() {
 				$('.dp').hide();
 			});
@@ -676,15 +699,35 @@ var guardarPedidoVenta = function () {
 		var idPedido = $('#pedidos').val();
 		var limiteDias = $('.limiteDias').val();
 		var monto = $('.monto').val();
+		var formdata = new FormData($("#formPedido")[0]);
 		$.ajax({
 	  	  url: base_url+'index.php/ventaPedido/agregarVentaPedido',
 	      type: 'POST',
-	      data: {idPedido:idPedido,limiteDias:limiteDias,monto:monto},
+				contentType: false,
+	      processData: false,
+	      data: formdata,
 	      success: function(data){
 					$('.notificacionRespuesta').modal("show");
 					$('.respuesta').html(data);
 	      }
 	  	});
 	}
+}
+var calcular = function (index) {
+	var pre = $('#pre'+index).val();
+	var can = $('#can'+index).val();
+	var tot = $('#tot'+index).val();
+	$('#tot'+index).val((pre*1)*(can*1));
+	calcularTotales();
+}
+var calcularTotales = function () {
+	var t = 0;
+	$('input[name="totalPed[]"]').each(function() {
+
+		if ($(this).val() != "") {
+			t = t + ($(this).val()*1);
+		}
+	});
+	$("#totalesPed").val(t);
 }
 </script>

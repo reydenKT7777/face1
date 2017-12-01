@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 21-11-2017 a las 00:41:02
+-- Tiempo de generación: 27-11-2017 a las 13:14:01
 -- Versión del servidor: 5.7.20-0ubuntu0.16.04.1
 -- Versión de PHP: 7.0.22-0ubuntu0.16.04.1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `db_libreria2`
+-- Base de datos: `db_libreria3`
 --
 
 -- --------------------------------------------------------
@@ -34,14 +34,6 @@ CREATE TABLE `almacen` (
   `direccion` varchar(500) DEFAULT NULL,
   `estadoA` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `almacen`
---
-
-INSERT INTO `almacen` (`id_almacen`, `id_sucursal`, `nombre_almacen`, `tipo_almacen`, `direccion`, `estadoA`) VALUES
-(5, 4, 'Almacen de cuadernos', 'Cuadernos', 'no se', 1),
-(8, 5, 'Almacen de cuadernos', 'Cuadernos', 'no se', 1);
 
 -- --------------------------------------------------------
 
@@ -60,7 +52,7 @@ CREATE TABLE `caja` (
 --
 
 INSERT INTO `caja` (`id`, `id_sucursal`, `monto`) VALUES
-(3, 5, 0);
+(1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -80,14 +72,6 @@ CREATE TABLE `cliente` (
   `publico` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `cliente`
---
-
-INSERT INTO `cliente` (`id`, `nombre_cliente`, `nit`, `direccion`, `tipo_cliente`, `telefono`, `correo`, `pass`, `publico`) VALUES
-(1, 'Herber Mendoza Torrez', 3866615, NULL, 'minorista', 76543210, 'unx7777@gmail.com', '202cb962ac59075b964b07152d234b70', b'1'),
-(2, 'Aron Acebes Milan', 9374328, 'ntc', 'Mayorista', 7654322, 'milanntc@gmail.com', '', b'0');
-
 -- --------------------------------------------------------
 
 --
@@ -104,13 +88,6 @@ CREATE TABLE `contrato` (
   `estadoContrato` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `contrato`
---
-
-INSERT INTO `contrato` (`id`, `id_personal`, `id_tipo_contrato`, `fecha_contrato`, `estado`, `fecha_fin_contrato`, `estadoContrato`) VALUES
-(7, 888828, 11, '2017-11-16', b'1', '0000-00-00', b'1');
-
 -- --------------------------------------------------------
 
 --
@@ -126,28 +103,6 @@ CREATE TABLE `detalle_pedido` (
   `estado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `detalle_pedido`
---
-
-INSERT INTO `detalle_pedido` (`id`, `id_pedido`, `id_producto`, `cantidad`, `total`, `estado`) VALUES
-(1, NULL, 4, 150, 2250, 0),
-(2, 4, 4, 50, 750, 0),
-(3, 5, 10, 50, 675, 0),
-(4, 5, 11, 6, 15, 0),
-(5, 5, 4, 25, 375, 0),
-(6, 6, 11, 25, 62.5, 0),
-(7, 6, 10, 52, 702, 0),
-(8, 6, 4, 100, 1500, 0),
-(9, 7, 10, 50, 675, 0),
-(10, 8, 10, 50, 675, 0),
-(11, 8, 4, 60, 900, 0),
-(12, 8, 11, 100, 250, 0),
-(13, 9, 10, 50, 675, 0),
-(14, 10, 10, 50, 675, 0),
-(15, 11, 10, 50, 675, 0),
-(16, 11, 11, 50, 125, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -162,20 +117,6 @@ CREATE TABLE `detalle_pedido_cli` (
   `total` double DEFAULT NULL,
   `estado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `detalle_pedido_cli`
---
-
-INSERT INTO `detalle_pedido_cli` (`id`, `nro_pedido`, `id_producto`, `cantidad`, `total`, `estado`) VALUES
-(1, 1, 4, 12, 180, 1),
-(2, 2, 10, 10, 135, 1),
-(3, 2, 4, 10, 150, 1),
-(4, 2, 11, 12, 30, 1),
-(5, 3, 11, 25, 62.5, 1),
-(6, 3, 11, 4, 10, 1),
-(7, 4, 11, 10, 25, 1),
-(8, 4, 10, 12, 162, 1);
 
 -- --------------------------------------------------------
 
@@ -224,14 +165,6 @@ CREATE TABLE `historial_egreso_producto` (
   `id_personal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `historial_egreso_producto`
---
-
-INSERT INTO `historial_egreso_producto` (`id`, `id_producto`, `cantidad`, `fecha_egreso`, `hora_egreso`, `id_personal`) VALUES
-(1, 11, 10, '2017-11-20', '22:47:46', 2222),
-(2, 10, 12, '2017-11-20', '22:47:46', 2222);
-
 -- --------------------------------------------------------
 
 --
@@ -246,14 +179,6 @@ CREATE TABLE `historial_ingreso_producto` (
   `hora_ingreso` varchar(10) DEFAULT NULL,
   `id_personal` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `historial_ingreso_producto`
---
-
-INSERT INTO `historial_ingreso_producto` (`id`, `id_producto`, `cantidad`, `fecha_ingreso`, `hora_ingreso`, `id_personal`) VALUES
-(1, 10, 50, '2017-11-20', '22:44:15', 1111),
-(2, 11, 50, '2017-11-20', '22:44:15', 1111);
 
 -- --------------------------------------------------------
 
@@ -285,16 +210,6 @@ CREATE TABLE `nota_venta` (
   `fecha_limite` date DEFAULT NULL,
   `montoPendiente` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `nota_venta`
---
-
-INSERT INTO `nota_venta` (`id`, `id_personal`, `nro_pedido`, `fecha_venta`, `monto_total`, `tipo_venta`, `fecha_limite`, `montoPendiente`) VALUES
-(1, 2222, 1, '2017-11-19', 180, 'Al contado', '0000-00-00', 180),
-(2, 2222, 2, '2017-11-20', 315, 'A credito', '2017-11-30', 315),
-(3, 2222, 3, '2017-11-20', 72.5, 'Al contado', '0000-00-00', 72.5),
-(4, 2222, 4, '2017-11-20', 187, 'Al contado', '0000-00-00', 187);
 
 -- --------------------------------------------------------
 
@@ -355,16 +270,6 @@ CREATE TABLE `pedido_cli` (
   `estado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `pedido_cli`
---
-
-INSERT INTO `pedido_cli` (`nro_pedido`, `id_sucursal`, `id_cliente`, `fecha_pedido`, `monto`, `estado`) VALUES
-(1, 4, 1, '2017-11-19', 180, 1),
-(2, 4, 1, '2017-11-20', 315, 1),
-(3, 4, 2, '2017-11-20', 72.5, 1),
-(4, 4, 1, '2017-11-20', 187, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -379,23 +284,6 @@ CREATE TABLE `pedido_prov` (
   `monto_total` double DEFAULT NULL,
   `estado` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `pedido_prov`
---
-
-INSERT INTO `pedido_prov` (`id`, `id_proveedor`, `fecha_pedido`, `nro_pedido`, `monto_total`, `estado`) VALUES
-(1, NULL, '2017-11-20', 1, NULL, b'0'),
-(2, 3, '2017-11-20', 2, NULL, b'0'),
-(3, 3, '2017-11-20', 3, NULL, b'0'),
-(4, 3, '2017-11-20', 4, NULL, b'0'),
-(5, 3, '2017-11-20', 5, 1065, b'0'),
-(6, 2, '2017-11-20', 6, 2264.5, b'0'),
-(7, 3, '2017-11-20', 7, 1825, b'0'),
-(8, 3, '2017-11-20', 8, 1825, b'0'),
-(9, 2, '2017-11-20', 9, 800, b'0'),
-(10, 2, '2017-11-20', 10, 800, b'0'),
-(11, 2, '2017-11-20', 11, 800, b'0');
 
 -- --------------------------------------------------------
 
@@ -422,10 +310,7 @@ CREATE TABLE `personal` (
 --
 
 INSERT INTO `personal` (`ci`, `nombres`, `apellidos`, `fecha_nacimiento`, `celular`, `direccion`, `cargo`, `usuario`, `password`, `id_sucursal`, `estadoPer`) VALUES
-(1111, 'Adrian', 'Tapia Mendoza', '1990-04-11', 7254310, 'ntc', 'Almacenero', '1111', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 4, b'1'),
-(2222, 'Eliana', 'Gonzales', '1990-08-14', 76543212, 'no se', 'Vendedor', '2222', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 4, b'1'),
-(3333, 'Eduardo', 'T K', '1990-10-02', 72123665, 'no se', 'Cajero', '3333', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 4, b'1'),
-(888828, 'Reynaldo', 'Kantuta Tarifa', '2017-09-21', 76543210, 'no se', 'Super administrador', '888828', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 4, b'1');
+(14, 'Jhennyfer', 'Llamoca', '1990-08-27', 765438, 'no se', 'Super administrador', '14', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1');
 
 -- --------------------------------------------------------
 
@@ -446,16 +331,6 @@ CREATE TABLE `producto` (
   `estadoPro` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `producto`
---
-
-INSERT INTO `producto` (`id`, `nombre_pro`, `descripcion`, `precio`, `marca`, `stock`, `id_tipo_producto`, `id_tipo_unitario`, `id_almacen`, `estadoPro`) VALUES
-(4, 'Colores', 'Caja de 12 colores ', 15, 'Faber Castel', 50, 3, 2, 5, b'1'),
-(9, 'Gomas', 'Gomas de cuaderno', 2.5, 'Stanford', 0, 6, 2, 8, b'1'),
-(10, 'Empastados', 'Cuadernos empastados, tamaño carta de 50 hojas', 13.5, 'Lider', 178, 4, 2, 5, b'1'),
-(11, 'Micro punta', 'Boligrafos azules con micro punta ', 2.5, 'Faber Castel', 99, 7, 3, 5, b'1');
-
 -- --------------------------------------------------------
 
 --
@@ -472,14 +347,6 @@ CREATE TABLE `proveedor` (
   `correo` varchar(300) DEFAULT NULL,
   `estado` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `proveedor`
---
-
-INSERT INTO `proveedor` (`id`, `nombre_prov`, `direccion_prov`, `telefono_prov`, `nit`, `nombre_encargado`, `correo`, `estado`) VALUES
-(2, 'CJ', 'n me acuerdo', 76542410, 10012, 'no me acuerdo', 'cj@gmail.com', b'1'),
-(3, 'Akama', 'Black temple', 7600666, 666, 'Illidan', 'btemple@gmail.com', b'1');
 
 -- --------------------------------------------------------
 
@@ -502,8 +369,7 @@ CREATE TABLE `sucursal` (
 --
 
 INSERT INTO `sucursal` (`id`, `nombre`, `nit`, `telefono`, `direccion`, `emai`, `estado`) VALUES
-(4, 'San Camilo', 1000201, 76543210, 'Av. Siempre viva Nro 321', 'sucursalsancamilo@gmail.com', b'1'),
-(5, 'San pedro', 2892349, 76543219, 'NTC', 'sucursalsanpedro@gmailcom', b'1');
+(1, 'San camilo', 14, 7676567, 'no se', 'ns@gmail.com', b'1');
 
 -- --------------------------------------------------------
 
@@ -523,14 +389,6 @@ CREATE TABLE `tipo_contrato` (
   `estadoTipoC` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `tipo_contrato`
---
-
-INSERT INTO `tipo_contrato` (`id`, `nombre_tipo_contrato`, `experiencia_trabajo`, `turno_trabajo`, `dias_trabajo`, `horario_trabajo`, `tipo_sueldo`, `sueldo`, `estadoTipoC`) VALUES
-(11, 'Navideño', 'Medio', 'Mañana', 'Lunes,Martes,Miercoles,Jueves,Viernes,Sabado,Domingo', '7:00 a 14:00', 'Por mes', 1500, b'1'),
-(12, 'otro', 'Medio', 'Tarde', 'Lunes,Martes,Miercoles,Jueves,Viernes', '14:00 a 19:00', 'Por mes', 1800, b'1');
-
 -- --------------------------------------------------------
 
 --
@@ -543,17 +401,6 @@ CREATE TABLE `tipo_producto` (
   `estadoTP` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `tipo_producto`
---
-
-INSERT INTO `tipo_producto` (`id`, `nombre_tipo_p`, `estadoTP`) VALUES
-(3, 'Lapices', b'1'),
-(4, 'Cuadernos', b'1'),
-(5, 'Pegamento', b'1'),
-(6, 'Escolar', b'1'),
-(7, 'Boligrafos', b'1');
-
 -- --------------------------------------------------------
 
 --
@@ -565,16 +412,6 @@ CREATE TABLE `tipo_unitario` (
   `nombre_tipo_u` varchar(300) DEFAULT NULL,
   `estadoTU` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `tipo_unitario`
---
-
-INSERT INTO `tipo_unitario` (`id`, `nombre_tipo_u`, `estadoTU`) VALUES
-(2, 'Paquete', b'1'),
-(3, 'Caja', b'1'),
-(4, 'Docena', b'1'),
-(5, 'Litro', b'1');
 
 --
 -- Índices para tablas volcadas
@@ -759,32 +596,32 @@ ALTER TABLE `tipo_unitario`
 -- AUTO_INCREMENT de la tabla `almacen`
 --
 ALTER TABLE `almacen`
-  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `caja`
 --
 ALTER TABLE `caja`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido_cli`
 --
 ALTER TABLE `detalle_pedido_cli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `historial_caja_egreso`
 --
@@ -799,12 +636,12 @@ ALTER TABLE `historial_caja_ingreso`
 -- AUTO_INCREMENT de la tabla `historial_egreso_producto`
 --
 ALTER TABLE `historial_egreso_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `historial_ingreso_producto`
 --
 ALTER TABLE `historial_ingreso_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `nota_ingreso`
 --
@@ -814,7 +651,7 @@ ALTER TABLE `nota_ingreso`
 -- AUTO_INCREMENT de la tabla `nota_venta`
 --
 ALTER TABLE `nota_venta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `pago_contrato`
 --
@@ -834,42 +671,42 @@ ALTER TABLE `pago_pedido`
 -- AUTO_INCREMENT de la tabla `pedido_cli`
 --
 ALTER TABLE `pedido_cli`
-  MODIFY `nro_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `nro_pedido` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `pedido_prov`
 --
 ALTER TABLE `pedido_prov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `sucursal`
 --
 ALTER TABLE `sucursal`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `tipo_contrato`
 --
 ALTER TABLE `tipo_contrato`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`
 --
 ALTER TABLE `tipo_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `tipo_unitario`
 --
 ALTER TABLE `tipo_unitario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- Restricciones para tablas volcadas
 --

@@ -79,13 +79,13 @@ class VentaPedido extends CI_Controller{
   public function agregarVentaPedido()
   {
     $this->load->model('model_pedido_cli');
-    $id_pedido = $this->input->post("idPedido");
+    $id_pedido = $this->input->post("pedidos");
     // Cambia de estado el peedido
     $data  = array('estado' => 1 );
     $this->model_pedido_cli->modificar_pedido_cli($id_pedido,$data);
     // verifica el tipo de venta
     $limiteDias = $this->input->post("limiteDias");
-    $total = $this->input->post("monto");
+    $total = $this->input->post("totalesPed");
     if ($limiteDias == "") {
       $tipoVenta = "Al contado";
     }
@@ -119,6 +119,19 @@ class VentaPedido extends CI_Controller{
                       );
     }
     $this->model_nota_venta->agregar_datos($notaVenta);
+    // Modificar la lista de pedidos y descontar del stock de productos
+    $id_detalle = $this->input->post("id_detalle");
+    $id_producoPet = $this->input->post("id_producoPet");
+    $cantidadPed = $this->input->post("cantidadPed");
+    $totalPed = $this->input->post("totalPed");
+    for ($i=0; $i <count($id_detalle) ; $i++) {
+      $detalle = array('cantidad' => $cantidadPed[$i],
+                        'total' => $totalPed[$i]
+                      );
+      $this->model_detalle_pedido_cli->modificar_detalle_pedido_cli($id_detalle[$i],$detalle);
+      $this->model_producto->decrementar($id_producoPet[$i],$cantidadPed[$i]);
+      $this->model_producto->historialSal($id_producoPet[$i],$cantidadPed[$i]);
+    }
     echo "<br><br><br><br><br>
           <center>
             <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>

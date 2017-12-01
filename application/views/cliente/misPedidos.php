@@ -84,8 +84,8 @@ var base_url = $('#base').val();
       success:function (data) {
         $('.modal_verPedido').modal("show");
         var html = "";
-        html += "<h1>"+data[0]["nombre"]+"</h1>";
-        html += "<h3>Fecha: "+data[0]["fecha_pedido"]+"</h3>";
+        html += "<h1>"+data.pedido[0]["nombre"]+"</h1>";
+        html += "<h3>Fecha: "+data.pedido[0]["fecha_pedido"]+"</h3>";
         html += '<table class="table">'+
           '<thead>'+
             '<tr>'+
@@ -98,14 +98,14 @@ var base_url = $('#base').val();
             '</tr>'+
           '</thead>'+
           '<tbody>';
-            for (var i = 0; i < data.length; i++) {
+            for (var i = 0; i < data.pedido.length; i++) {
               html += '<tr>'+
                 '<td>'+(i+1)+'</td>'+
-                '<td>'+data[i]["nombre_pro"]+" "+data[i]["marca"]+'</td>'+
-                '<td>'+data[i]["descripcion"]+'</td>'+
-                '<td>'+data[i]["precio"]+'</td>'+
-                '<td>'+data[i]["cantidad"]+'</td>'+
-                '<td>'+data[i]["total"]+'</td>'+
+                '<td>'+data.pedido[i]["nombre_pro"]+" "+data.pedido[i]["marca"]+'</td>'+
+                '<td>'+data.pedido[i]["descripcion"]+'</td>'+
+                '<td>'+data.pedido[i]["precio"]+'</td>'+
+                '<td>'+data.pedido[i]["cantidad"]+'</td>'+
+                '<td>'+data.pedido[i]["total"]+'</td>'+
               '</tr>';
             }
           html += '</tbody>'+
@@ -116,7 +116,7 @@ var base_url = $('#base').val();
               '<th></th>'+
               '<th></th>'+
               '<th></th>'+
-              '<th>'+data[0]["monto"]+'</th>'+
+              '<th>'+data.pedido[0]["monto"]+'</th>'+
             '</tr>'+
           '</tfoot>'+
         '</table>';

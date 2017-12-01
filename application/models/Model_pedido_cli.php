@@ -18,7 +18,7 @@ class Model_pedido_cli extends CI_Model {
 													from cliente c, pedido_cli p
 													where
 													c.id = p.id_cliente and
-													p.estado = 0 and 
+													p.estado = 0 and
 													p.id_sucursal = ".$this->session->id_sucursal." and
 													(c.nombre_cliente like '".$l."%'or c.nombre_cliente like '%".$l."%' or c.nombre_cliente like '%".$l."') or
 													(c.nit like '".$l."%'or c.nit like '%".$l."%' or c.nit like '%".$l."')");
@@ -47,7 +47,8 @@ class Model_pedido_cli extends CI_Model {
 	}
 	public function verPedido($id)
 	{
-		$r = $this->db->query("select * from pedido_cli p, detalle_pedido_cli d, producto pro,sucursal s
+		$r = $this->db->query("select *, d.id as idDetalle
+													from pedido_cli p, detalle_pedido_cli d, producto pro,sucursal s
 													where d.nro_pedido = p.nro_pedido and
 													s.id = p.id_sucursal and
 													d.id_producto = pro.id and
