@@ -24,6 +24,13 @@ class Model_caja extends CI_Model {
                 ->get('caja');
 		return $query->result();
 	}
+	public function buscar_cajaSucursal($id)
+	{
+		$query = $this->db->select('*')
+                ->where('id_sucursal', $id)
+                ->get('caja');
+		return $query->result();
+	}
 	public function eliminar_datos($id)
 	{
 		$this->db->delete('caja', array('id' => $id));
@@ -45,5 +52,12 @@ class Model_caja extends CI_Model {
 														h.id_caja = $id AND
 														h.fecha BETWEEN '$f1' and '$f2'");
 		return  $r->result();
+	}
+	public function verFondos($id)
+	{
+		$r = $this->db->query("select s.nombre, s.direccion , c.monto, c.id from caja c, sucursal s
+													where c.id_sucursal = s.id and
+													c.id = $id");
+   return $r->result();
 	}
 }

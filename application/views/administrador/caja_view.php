@@ -63,7 +63,22 @@
 	       </div>
 	<!--====================================================================-->
 <!--====================================================================-->
-         <div class="modal fade modal_agregar_datos_caja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+         <div class="modal fade modal_agregar_fondos" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+           <div class="modal-dialog modal-xs" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">×</span></button>
+                 <h4 class="modal-title" id="myLargeModalLabel">Formulario de ingreso a Caja</h4> </div>
+                 <div class="modal-body">
+                  <div class="formulario_agregarFondosCaja"></div>
+               </div>
+             </div>
+           </div>
+       </div>
+<!--====================================================================-->
+<!--====================================================================-->
+       <div class="modal fade modal_agregar_datos_caja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
            <div class="modal-dialog modal-lg" role="document">
              <div class="modal-content">
                  <div class="modal-header">
@@ -80,7 +95,7 @@
        </div>
 <!--====================================================================-->
 <!--====================================================================-->
-         <div class="modal fade modal_modificar_datos_caja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+      <div class="modal fade modal_modificar_datos_caja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
            <div class="modal-dialog modal-lg" role="document">
              <div class="modal-content">
                  <div class="modal-header">
@@ -98,7 +113,7 @@
        </div>
 <!--====================================================================-->
 <!--====================================================================-->
-         <div class="modal fade modal_eliminar_datos_caja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+      <div class="modal fade modal_eliminar_datos_caja" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
            <div class="modal-dialog modal-lg" role="document">
              <div class="modal-content">
                  <div class="modal-header">
@@ -117,8 +132,58 @@
 <!--====================================================================-->
 
 </html>
+
 <script>
 var base_url = '<?=base_url()?>';
+// Añadir fondos a caja
+var idCaja = 0;
+var mostrar_modalAdd = function (id) {
+  idCaja = id;
+  $('.modal_agregar_fondos').modal("show");
+  $.ajax({
+    url: base_url+'index.php/controlador_caja/verFondos',
+    type: 'POST',
+    dataType: 'json',
+    data: {id:id},
+    success:function (data) {
+      var html = "";
+      html += '<center><h1>'+data[0]["nombre"]+' '+data[0]["direccion"]+'</h1></center>'+
+      '<ul class="list-group">'+
+        '<li class="list-group-item">'+
+          '<h2>Fondos: '+data[0]["monto"]+' Bs.</h2>'+
+        '</li>'+
+        '<li class="list-group-item">'+
+          '<div class="input-group">'+
+            '<span class="input-group-addon"><i class="fa fa-dollar"></i></span>'+
+            '<input type="text" class="form-control" id="fondos" placeholder="">'+
+          '</div>'+
+        '</li>'+
+        '<li class="list-group-item">'+
+          '<div class="input-group">'+
+            '<button type="button" class="btn btn-success" placeholder="" onclick="agregarFondos()">Guardar <i class="fa fa-save"></i></button>'+
+          '</div>'+
+        '</li>'+
+      '</ul>';
+      $('.formulario_agregarFondosCaja').html(html);
+    }
+  });
+
+}
+var agregarFondos = function () {
+  var fondos = $('#fondos').val();
+  $.ajax({
+    url: base_url+'index.php/controlador_caja/agregarFondos',
+    type: 'POST',
+    //dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
+    data: {fondos:fondos,idCaja:idCaja},
+    success:function () {
+      $('.modal_agregar_fondos').modal("hide");
+      imprime_lista_caja();
+      $('.formulario_agregarFondosCaja').empty();
+    }
+  });
+
+}
 // Funcion que imprime la lista de registos de l atabla caja
 var imprime_lista_caja = function() {
 	$.ajax({
@@ -176,7 +241,10 @@ var imprime_tabla_caja = function(data) {
 			    //html += '<td>'+data[i]['id']+'</td>';
 			    html += '<td>'+data[i]['nombre']+'</td>';
 			    html += '<td>'+data[i]['monto']+'</td>';
-					html += '<td><button class="btn btn-primary" title="Boton que muestra el historial de la caja" onclick ="mostrar_historial_cajaIn('+data[i]['id']+')">Ver historial</button></td>';
+					html += '<td>';
+          html += '<button class="btn btn-primary" title="Boton que muestra el historial de la caja" onclick ="mostrar_historial_cajaIn('+data[i]['id']+')">Ver historial</button>';
+          html += '<button class="btn btn-success" title="Boton que muestra el historial de la caja" onclick ="mostrar_modalAdd('+data[i]['id']+')">Añadir fondos <i class="fa fa-dollar"></i></button>';
+          html += '</td>';
 			    //html += '<td><button class="btn btn-info btn-xs" onclick ="mostrar_modificar_caja('+data[i]['id']+')">Modificar</button><button class="btn btn-danger btn-xs" onclick ="mostrar_eliminar_caja('+data[i]['id']+')">Eliminar</button></td>';
 				html += '</tr>';
 			}
@@ -212,7 +280,7 @@ $(document).ready(function() {
 		dateFormat:'yy-mm-dd'
 	});
 });
-var idCaja = 0;
+
 var mostrar_historial_cajaIn = function (id) {
 	$(".modal_ver_historial").modal("show");
   $('#f1').val("");

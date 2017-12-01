@@ -165,23 +165,33 @@ class Admin extends CI_Controller {
 	}
 	public function vendedor()
 	{
+		$this->verificar();
 		$data["vista"] = 'sistema/vendedor';
 		$this->load->view('frontend/main',$data);
 	}
 	public function almacenero()
 	{
+		$this->verificar();
 		$data["vista"] = 'sistema/almacenero';
 		$this->load->view('frontend/main',$data);
 	}
 	public function administrador()
 	{
+		$this->verificar();
 		$data["vista"] = 'administrador/admin';
 		$this->load->view('frontend/main_admin',$data);
 	}
 	public function cajero()
 	{
+		$this->verificar();
 		$data["vista"] = 'sistema/cajero';
 		$this->load->view('frontend/main',$data);
+	}
+	public function verificar()
+	{
+		if (!($this->session->ci)) {
+			redirect(base_url()."index.php/admin/login",'refresh');
+		}
 	}
 	public function logout()
 	{

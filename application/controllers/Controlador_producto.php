@@ -11,9 +11,16 @@ class Controlador_producto extends CI_Controller {
 	}
 	public function index()
 	{
+		$this->verificar();
 		//$this->load->view('producto_view');
 		$data["vista"] = 'administrador/producto_view';
 		$this->load->view('frontend/main_admin',$data);
+	}
+	public function verificar()
+	{
+		if (!($this->session->ci)) {
+			redirect(base_url()."index.php/admin/login",'refresh');
+		}
 	}
 	public function listar_producto()
 	{

@@ -9,8 +9,15 @@ class Controlador_sucursal extends CI_Controller {
 	}
 	public function index()
 	{
+		$this->verificar();
 		$data["vista"] = 'administrador/sucursal_view';
 		$this->load->view('frontend/main_admin',$data);
+	}
+	public function verificar()
+	{
+		if (!($this->session->ci)) {
+			redirect(base_url()."index.php/admin/login",'refresh');
+		}
 	}
 	public function listar_sucursal()
 	{

@@ -9,6 +9,7 @@ class Controlador_almacen extends CI_Controller {
 	}
 	public function index()
 	{
+		$this->verificar();
 		//$this->load->view('almacen_view');
 		$data["vista"] = 'administrador/almacen_view';
 		$this->load->view('frontend/main_admin',$data);
@@ -68,5 +69,11 @@ class Controlador_almacen extends CI_Controller {
 		$data = array('estadoA' => 0 );
 		$this->model_almacen->modificar_almacen($id,$data);
 		//$r = $this->model_almacen->eliminar_datos($id);
+	}
+	public function verificar()
+	{
+		if (!($this->session->ci)) {
+			redirect(base_url()."index.php/admin/login",'refresh');
+		}
 	}
 }

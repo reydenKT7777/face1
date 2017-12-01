@@ -5,12 +5,20 @@ class Controlador_caja extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('model_caja');
+		$this->load->model('model_historial_caja_ingreso');
 	}
 	public function index()
 	{
+		$this->verificar();
 		//$this->load->view('caja_view');
 		$data["vista"] = 'administrador/caja_view';
 		$this->load->view('frontend/main_admin',$data);
+	}
+	public function verificar()
+	{
+		if (!($this->session->ci)) {
+			redirect(base_url()."index.php/admin/login",'refresh');
+		}
 	}
 	public function listar_caja()
 	{
@@ -68,5 +76,31 @@ class Controlador_caja extends CI_Controller {
 		$id = $this->input->post("id");
 		$r = $this->model_caja->mostrarHistorialEgresos($id,$f1,$f2);
 		echo json_encode($r);
+	}
+	public function verFondos()
+	{
+		$id = $this->input->post("id");
+		$datosCaja = $this->model_caja->verFondos($id);
+		echo json_encode($datosCaja);
+	}
+	public function agregarFondos()
+	{
+		$fondos = $this->input->post("fondos");
+		$idCaja = $this->input->post("idCaja");
+		$datosCaja = $this->model_caja->verFondos($idCaja);
+		foreach ($datosCaja as $row) {
+			$monto = $row->monto;
+		}
+		$monto = $monto + $fondos;
+		$data = array('monto' =>  $monto);
+		$this->model_caja->modificar_caja($idCaja,$data);
+		$caja = array('id_caja' => $idCaja,
+									'id_personal'=> $this->session->ci,
+									'monto' => $fondos,
+									'fecha' => date("Y-m-d"),
+									'hora' => date("G:i:s"),
+									'detalle' => 'Ingreso a caja'
+								 );
+		$this->model_historial_caja_ingreso->agregar_datos($caja);
 	}
 }

@@ -16,7 +16,8 @@ class Model_contrato extends CI_Model {
 																from contrato c,personal p, tipo_contrato t, sucursal s
 																where c.id_personal = p.ci and c.id_tipo_contrato = t.id and
 																s.id = p.id_sucursal and
-																s.id = '.$id.'
+																s.id = '.$id.' and
+																c.estadoContrato = 1
 															');
 		return $query->result();
 	}

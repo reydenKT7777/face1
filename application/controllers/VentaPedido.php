@@ -10,6 +10,8 @@ class VentaPedido extends CI_Controller{
     $this->load->model("model_nota_venta");
     $this->load->model("model_detalle_pedido_cli");
     $this->load->model("model_producto");
+    $this->load->model("model_caja");
+    $this->load->model('model_historial_caja_ingreso');
   }
 
   public function agregarVentaDirecta()
@@ -65,6 +67,7 @@ class VentaPedido extends CI_Controller{
                       );
     }
     $this->model_nota_venta->agregar_datos($notaVenta);
+
     echo "<br><br><br><br><br>
           <center>
             <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>
@@ -163,12 +166,41 @@ class VentaPedido extends CI_Controller{
     $id = $this->input->post('idNota');
     $cantidad = $this->input->post('cantidad');
     $pagar = $this->model_nota_venta->pagar($id,$cantidad);
+    // Incremento de caja y registr de historial
+    $fondos = $cantidad;
+    $caja = $this->model_caja->buscar_cajaSucursal($this->session->id_sucursal);
+    foreach ($caja as $row) {
+        $idCaja = $row->id;
+    }
+		$datosCaja = $this->model_caja->verFondos($idCaja);
+		foreach ($datosCaja as $row) {
+			$monto = $row->monto;
+		}
+		$monto = $monto + $fondos;
+		$data = array('monto' =>  $monto);
+		$this->model_caja->modificar_caja($idCaja,$data);
+		$caja = array('id_caja' => $idCaja,
+									'id_personal'=> $this->session->ci,
+									'monto' => $fondos,
+									'fecha' => date("Y-m-d"),
+									'hora' => date("G:i:s"),
+									'detalle' => 'Ingreso a caja por Venta'
+								 );
+		$this->model_historial_caja_ingreso->agregar_datos($caja);
+    // ================================
     $data = array('resp' => $pagar );
     echo json_encode($data);
   }
   public function reportesVenta()
   {
+    $this->verificar();
     $data["vista"] = 'administrador/reportesVentas';
 		$this->load->view('frontend/main_admin',$data);
   }
+  public function verificar()
+	{
+		if (!($this->session->ci)) {
+			redirect(base_url()."index.php/admin/login",'refresh');
+		}
+	}
 }
