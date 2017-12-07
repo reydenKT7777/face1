@@ -594,7 +594,8 @@ var verPedido = function (id) {
 			//$('.modal_verPedido').modal("show");
 			var html = "";
 			html += "<h1>"+data.pedido[0]["nombre"]+"</h1>";
-			html += "<h3>Fecha: "+data.pedido[0]["fecha_pedido"]+"</h3>";
+			html += "<div><h3  class='col-md-6'>Fecha: "+data.pedido[0]["fecha_pedido"]+"</h3>";
+			html += "<h3 class='col-md-6'>Nro operaci&oacute;n: "+data.pedido[0]["nro_pedido"]+"</h3></div>";
 			//html += '<form class="listaProductos">';
 			html += '<input value="'+data.pedido[0]["monto"]+'" id="" name="" type="hidden" class="monto">';
 			html += '<div class="col-xs-12 col-sm-12">'+

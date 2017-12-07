@@ -101,4 +101,19 @@ class Model_nota_venta extends CI_Model {
 		}
 		return $very;
 	}
+	public function reporteVentas($id)
+	{
+		$r = $this->db->query("SELECT n.nro_pedido,n.fecha_venta, n.monto_total , n.tipo_venta,
+													c.nombre_cliente,c.nit,c.tipo_cliente,
+													pro.nombre_pro, pro.descripcion, pro.marca , d.cantidad, d.total,
+													per.nombres,per.apellidos
+													FROM nota_venta n
+													INNER JOIN pedido_cli p ON n.nro_pedido = p.nro_pedido
+													INNER JOIN detalle_pedido_cli d on d.nro_pedido = p.nro_pedido
+													INNER JOIN cliente c ON c.id = p.id_cliente
+													INNER JOIN producto pro on pro.id = d.id_producto
+													INNER JOIN personal per on per.ci = n.id_personal
+													where p.nro_pedido=$id");
+		return $r->result();
+	}
 }

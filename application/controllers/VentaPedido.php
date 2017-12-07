@@ -73,7 +73,7 @@ class VentaPedido extends CI_Controller{
             <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>
               La venta fue realizada con exito <i class='fa fa-check'></i>
             </a><br><br>
-            <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".base64_encode($id_pedido)."' class='btn btn-info'>
+            <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".base64_encode($id_pedido)."' target='_blank' class='btn btn-info'>
               Imprimir reporte <i class='fa fa-file-pdf-o'></i>
             </a>
           </center>
@@ -140,7 +140,7 @@ class VentaPedido extends CI_Controller{
             <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>
               La venta fue realizada con exito <i class='fa fa-check'></i>
             </a><br><br>
-            <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".base64_encode($id_pedido)."' class='btn btn-info'>
+            <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".base64_encode($id_pedido)."' target='_blank' class='btn btn-info'>
               Imprimir reporte <i class='fa fa-file-pdf-o'></i>
             </a>
           </center>
@@ -202,5 +202,115 @@ class VentaPedido extends CI_Controller{
 		if (!($this->session->ci)) {
 			redirect(base_url()."index.php/admin/login",'refresh');
 		}
+	}
+  function acentos($cadena) {
+    $buscar = explode(",","á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ,Ã¡,Ã©,Ã­,Ã&sup3;,Ãº,Ã±,ÃÃ¡,ÃÃ©,ÃÃ­,ÃÃ&sup3;,ÃÃº,ÃÃ±");
+    $cambiar = explode(",","á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ,á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ");
+    $textocorregido= str_replace($buscar, $cambiar, $cadena);
+    return $textocorregido;
+    }
+  public function reportePDF()
+  {
+		$idd = $this->input->get("id");
+		$id = base64_decode($idd);
+		//echo $id;
+		//$this->very_sesion_cargo();
+		// Se carga la libreria fpdf
+    $this->load->library('pdf');
+
+    // Se obtienen los alumnos de la base de datos
+    $r1 = $this->model_nota_venta->reporteVentas($id);
+
+		foreach ($r1 as $row) {
+			$nro_pedido = $row->nro_pedido;
+			$fecha_venta = $row->fecha_venta;
+			$monto_total = $row->monto_total;
+			$tipo_venta = $row->tipo_venta;
+      $nombre_cliente =$row->nombre_cliente;
+      $nit = $row->nit;
+      $nombres = $row->nombres;
+      $apellidos = $row->apellidos;
+      $tipo_cliente = $row->tipo_cliente;
+		}
+		//$r2 = $this->materia_prima_model->reporte_ingreso_mpp_cam($id);
+		$this->pdf = new Pdf();
+		// Agregamos una página
+		$this->pdf->AddPage();
+		// Define el alias para el número de página que se imprimirá en el pie
+		$this->pdf->AliasNbPages();
+
+		/* Se define el titulo, márgenes izquierdo, derecho y
+		 * el color de relleno predeterminado
+		 */
+		$this->pdf->SetTitle("Reporte");
+		$this->pdf->SetLeftMargin(15);
+		$this->pdf->SetRightMargin(15);
+		$this->pdf->SetFillColor(200,200,200);
+		//-----------------------------------------------------
+		$this->pdf->SetFont('Arial','B',11);
+		$this->pdf->Cell(30);
+		$this->pdf->Cell(120,10,'REPORTE DE NOTA VENTA',0,0,'C');
+		$this->pdf->SetFont('Arial','B',10);
+		$this->pdf->Ln(20);
+		//$this->pdf->Cell(30);
+    $this->pdf->Cell(120,10,'NRO OPERACION: '.$nro_pedido,0,0,'L');
+		$this->pdf->Cell(120,10,'FECHA VENTA: '.$fecha_venta,0,0,'L');
+		$this->pdf->Ln(7);
+		$this->pdf->Cell(120,10,'CLIENTE: '.utf8_decode($nombre_cliente),0,0,'L');
+		$this->pdf->Cell(120,10,'NIT: '.$nit,0,0,'L');
+    $this->pdf->Ln(7);
+    $this->pdf->Cell(120,10,'TIPO CLIENTE: '.utf8_decode($tipo_cliente),0,0,'L');
+    $this->pdf->Cell(120,10,'VENDEDOR: '.utf8_decode($nombres)." ".utf8_decode($apellidos),0,0,'L');
+		$this->pdf->Ln(7);
+
+		$this->pdf->Cell(120,10,'TOTAL BS.: '.$monto_total,0,0,'L');
+
+		//$this->pdf->Ln(7);
+		//$this->pdf->Cell(120,10,'D. PENDIENTE BS: Bs. '.$pendiente,0,0,'L');
+		//$this->pdf->Cell(120,10,'D. PENDIENTE U$D: $'.number_format($pendienteUsd,2,'.',','),0,0,'L');
+		$this->pdf->Ln(12);
+		// Se define el formato de fuente: Arial, negritas, tamaño 9
+		$this->pdf->SetFont('Arial', '', 8);
+		/*
+		 * TITULOS DE COLUMNAS
+		 *
+		 * $this->pdf->Cell(Ancho, Alto,texto,borde,posición,alineación,relleno);
+		 */
+		$this->pdf->Cell(5,7,'#','TBL',0,'C','1');
+	  $this->pdf->Cell(130,7,utf8_decode('DESCRIPCIÓN'),'TB',0,'L','1');
+	  //$this->pdf->Cell(25,7,'CODIGO','TB',0,'L','1');
+	  $this->pdf->Cell(20,7,'CANTIDAD','TB',0,'L','1');
+		$this->pdf->Cell(20,7,'TOTAL','TBR',0,'l','1');
+	  $this->pdf->Ln(7);
+	  // La variable $x se utiliza para mostrar un número consecutivo
+	  $x = 1;
+		foreach ($r1 as $row) {
+			//echo $row->peso_item."<br>";
+			//echo $row->nombre_color."<br>";
+			// se imprime el numero actual y despues se incrementa el valor de $x en uno
+      $this->pdf->Cell(5,5,$x++,'BL',0,'C',0);
+      // Se imprimen los datos de cada alumno
+      $this->pdf->Cell(130,5,utf8_decode($row->nombre_pro)." ".utf8_decode($row->descripcion)." ".utf8_decode($row->marca),'B',0,'L',0);
+      //$this->pdf->Cell(25,5,$row->cod_item,'B',0,'L',0);
+      $this->pdf->Cell(20,5,$row->cantidad,'B',0,'L',0);
+      //$this->pdf->Cell(20,5,$row->peso_item." ".$row->tipo_unitario,'B',0,'L',0);
+      //$this->pdf->Cell(20,5,"Bs ".number_format($row->precio_x_kl,2,'.',','),'B',0,'L',0);
+      //$this->pdf->Cell(20,5,"Bs ".number_format($row->monto_total,2,'.',','),'B',0,'L',0);
+			//$this->pdf->Cell(20,5,"$ ".number_format($row->precio_usd,2,'.',','),'B',0,'L',0);
+			$this->pdf->Cell(20,5,"Bs. ".number_format(($row->total),2,'.',','),'BR',0,'L',0);
+      //Se agrega un salto de linea
+      $this->pdf->Ln(5);
+
+		}
+		$this->pdf->Cell(5,7,'','TBL',0,'C','0');
+	  $this->pdf->Cell(130,7,'','TB',0,'L','0');
+	  $this->pdf->Cell(20,7,'','TB',0,'L','0');
+	  //$this->pdf->Cell(20,7,'','TB',0,'L','0');
+		//$this->pdf->Cell(20,7,'TOTAL','TB',	0,'C','0');
+	  //$this->pdf->Cell(20,7,"Bs ".number_format($total,2,'.',','),'TB',0,'L','0');
+	  //$this->pdf->Cell(20,7,'','TB',0,'C','0');
+		$this->pdf->Cell(20,7,"Bs. ".number_format($monto_total,2,'.',','),'TBR',0,'L','0');
+	  $this->pdf->Ln(7);
+		$this->pdf->Output("REPORTE NOTA VENTA .pdf", 'I');
 	}
 }
