@@ -24,7 +24,7 @@
 							<div class="">
 								<div class="col-xs-12 col-md-12 bloque">
 											<br> <center><h3 style="color:#14b03f">Productos disponibles</h3></center>
-											<div class="form-group col-xs-12 col-md-4">
+											<div class="form-group col-xs-12 col-md-12">
 													<select class="form-control" id="productos">
 														<option value="0">[.::::::::::::Buscar Producto::::::::::::.]</option>
 													</select>
@@ -247,9 +247,6 @@ $.fn.select2.amd.require([
       "<div class='select2-result-repository__avatar'></div>" +
       "<div class='select2-result-repository__meta'>" +
         "<div class='select2-result-repository__title '>" + repo.nombre_cliente + "</div>";
-    if (repo.descripcion) {
-      markup += "<div class='select2-result-repository__description'>" + repo.descripcion + "</div>";
-    }
 
     markup += "<div class='select2-result-repository__statistics'>" +
       "<div class='select2-result-repository__forks colorLetra'><i class='fa fa-flash'></i>Direcci&oacute;n: " + repo.direccion + "</div>" +
@@ -300,16 +297,22 @@ $.fn.select2.amd.require([
 	var $producto = $("#productos");
 	function formatRepoProducto (repo) {
 		if (repo.loading) return repo.text;
-		var markup = "<div class='select2-result-repository clearfix'>" +
-			"<div class='select2-result-repository__avatar'></div>" +
-			"<div class='select2-result-repository__meta'>" +
-				"<div class='select2-result-repository__title'>" + repo.nombre_pro + "</div>";
-
+		var markup = "<div class='select2-result-repository clearfix'>" ;
+		if (repo.stock <= 10) {
+			markup += "<div class='select2-result-repository__avatar'><img src='"+base_url+"assets/images/f2.jpg' /></div>";
+		}
+		else {
+			markup += "<div class='select2-result-repository__avatar'><img src='"+base_url+"assets/images/f1.jpg' /></div>";
+		}
+markup += "<div class='select2-result-repository__meta'>" +
+				"<div class='select2-result-repository__title'>" +
+				"<span class='label label-success'>Producto</span>"+repo.nombre_pro +
+				 //" <span class='label label-success'>Descripci&oacute;n</span>: " + repo.descripcion +
+				 "<br><br>	 <span class='label label-primary'>Precio</span>: "+ repo.precio +
+				 "	 <span class='label label-warning'>Marca</span>: " + repo.marca +
+				 "	 <span class='label label-danger'>Stock</span>: " + repo.stock +
+				 "</div>";
 		markup += "<div class='select2-result-repository__statistics'>" +
-			"<div class='select2-result-repository__forks'><i class='fa fa-flash'></i>Descripci&oacute;n: " + repo.descripcion + "</div>" +
-			"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i>Precio " + repo.precio + " </div><br>" +
-			"<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i>Marca: " + repo.marca + "</div><br>" +
-			"<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i>Stock: " + repo.stock + "</div>" +
 		"</div>" +
 		"</div></div>";
 
@@ -452,7 +455,7 @@ var agergarALista = function () {
 				var html = "";
 				html +="<tr>"+
 									"<td>"+data.producto[0]["nombre_pro"]+"</td>"+
-									"<td>"+data.producto[0]["descripcion"]+" "+data.producto[0]["marca"]+"</td>";
+									"<td>"+data.producto[0]["marca"]+"</td>";
 									for (var i = 0; i < data.Tunitario.length; i++) {
 										if (data.Tunitario[i]["id"] ==  data.producto[0]["id_tipo_unitario"]) {
 											var tunit = data.Tunitario[i]["nombre_tipo_u"];
@@ -623,7 +626,7 @@ var verPedido = function (id) {
 					'<tr>'+
 						'<th>#</th>'+
 						'<th>Producto</th>'+
-						'<th>Descripcion</th>'+
+						//'<th>Descripcion</th>'+
 						'<th>P/U</th>'+
 						'<th>Cantidad</th>'+
 						'<th>Total</th>'+
@@ -641,7 +644,7 @@ var verPedido = function (id) {
 							html += '<tr>'+
 								'<td><input type="hidden" name="id_detalle[]" value="'+data.pedido[i]["idDetalle"]+'">'+(i+1)+'</td>'+
 								'<td><input type="hidden" name="id_producoPet[]" value="'+data.pedido[i]["id_producto"]+'">'+data.pedido[i]["nombre_pro"]+" "+data.pedido[i]["marca"]+'</td>'+
-								'<td>'+data.pedido[i]["descripcion"]+'</td>'+
+								//'<td>'+data.pedido[i]["descripcion"]+'</td>'+
 								'<td><input id="pre'+i+'" type="text" name="precioPed[]" class="form-control" value="'+data.pedido[i]["precio"]+'" readonly=""></td>'+
 								'<td class="danger"><input id="can'+i+'" type="text" name="cantidadPed[]" onkeyup="calcular('+i+')" class="form-control" value="'+stock+'" >Solo existe '+stock+' de '+data.pedido[i]["cantidad"]+'</td>';
 								var tt = (data.pedido[i]["precio"] * 1) * (stock * 1);
@@ -653,7 +656,7 @@ var verPedido = function (id) {
 							html += '<tr>'+
 								'<td><input type="hidden" name="id_detalle[]" value="'+data.pedido[i]["idDetalle"]+'">'+(i+1)+'</td>'+
 								'<td><input type="hidden" name="id_producoPet[]" value="'+data.pedido[i]["id_producto"]+'">'+data.pedido[i]["nombre_pro"]+" "+data.pedido[i]["marca"]+'</td>'+
-								'<td>'+data.pedido[i]["descripcion"]+'</td>'+
+								//'<td>'+data.pedido[i]["descripcion"]+'</td>'+
 								'<td><input id="pre'+i+'" type="text" name="precioPed[]" class="form-control" value="'+data.pedido[i]["precio"]+'" readonly=""></td>'+
 								'<td><input id="can'+i+'" type="text" name="cantidadPed[]" onkeyup="calcular('+i+')" class="form-control" value="'+data.pedido[i]["cantidad"]+'"></td>'+
 								'<td><input id="tot'+i+'" type="text" name="totalPed[]" class="form-control" value="'+data.pedido[i]["total"]+'" readonly=""></td>'+
@@ -664,7 +667,7 @@ var verPedido = function (id) {
 				'<tfoot>'+
 					'<tr>'+
 						'<th></th>'+
-						'<th></th>'+
+						//'<th></th>'+
 						'<th></th>'+
 						'<th></th>'+
 						'<th></th>'+

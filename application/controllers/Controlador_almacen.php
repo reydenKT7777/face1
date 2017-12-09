@@ -14,6 +14,12 @@ class Controlador_almacen extends CI_Controller {
 		$data["vista"] = 'administrador/almacen_view';
 		$this->load->view('frontend/main_admin',$data);
 	}
+	public function stock()
+	{
+		$this->verificar();
+		$data["vista"] = 'sistema/almacenero';
+		$this->load->view('frontend/main_admin',$data);
+	}
 	public function listar_almacen()
 	{
 		$r = $this->model_almacen->listar_almacen();

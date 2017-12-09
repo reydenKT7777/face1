@@ -17,6 +17,9 @@
     <!-- colores fondos y estilos css EDITAR PARA MANIPULACION -->
     <link href="<?=base_url()?>assets/css/custom.css" rel="stylesheet">
 		<link href="<?=base_url()?>assets/css/jquery-ui.css" rel="stylesheet">
+		<link href="<?=base_url()?>assets/css/select2/select2.min.css" type="text/css" rel="stylesheet" />
+		<link href="<?=base_url()?>assets/css/select2/s2-docs.css" type="text/css" rel="stylesheet" >
+
 		<link href="<?=base_url()?>assets/css/datatables/dataTables.bootstrap.css" rel="stylesheet">
 		<link href="<?=base_url()?>assets/css/datatables/jquery.dataTables.css" rel="stylesheet">
 		<link href="<?=base_url()?>assets/css/estilos.css" rel="stylesheet">
@@ -26,7 +29,9 @@
 		<script src="<?=base_url()?>assets/js/jquery-ui.js"></script>
 		<script src="<?=base_url()?>assets/js/datatables/jquery.dataTables.js"></script>
 		<script src="<?=base_url()?>assets/js/datatables/dataTables.responsive.min.js"></script>
-
+		<script type="text/javascript" src="<?=base_url()?>assets/js/select2/prettify.min.js"></script>
+		<script type="text/javascript" src="<?=base_url()?>assets/js/select2/select2.full.js"></script>
+		<script type="text/javascript" src="<?=base_url()?>assets/js/select2/es.js"></script>
 
 
 
@@ -93,6 +98,7 @@
 																<li><a><i class="fa fa-cubes"></i> Almacenes<span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu" style="display: none">
 																				<li><a href="<?=base_url()?>index.php/controlador_almacen">Almacenes</a></li>
+																				<li><a href="<?=base_url()?>index.php/controlador_almacen/stock">Almacenes stock</a></li>
 																				<li><a href="<?=base_url()?>index.php/controlador_proveedor">Proveedores</a></li>
 																				<li><a href="<?=base_url()?>index.php/controlador_producto">Producto</a></li>
                                     </ul>

@@ -45,7 +45,7 @@ class Controlador_producto extends CI_Controller {
 	{
 		$id = $this->input->post('id');
 		$nombre_pro = $this->input->post('nombre_pro');
-		$descripcion = $this->input->post('descripcion');
+		//$descripcion = $this->input->post('descripcion');
 		$precio = $this->input->post('precio');
 		$marca = $this->input->post('marca');
 		//$stock = $this->input->post('stock');
@@ -55,7 +55,7 @@ class Controlador_producto extends CI_Controller {
 		$data = array(
 			'id' => $id,
 			'nombre_pro' => $nombre_pro,
-			'descripcion' => $descripcion,
+			//'descripcion' => $descripcion,
 			'precio' => $precio,
 			'marca' => $marca,
 			'stock' => 0,
@@ -71,7 +71,7 @@ class Controlador_producto extends CI_Controller {
 		$id = $this->input->post('id');
 		$id = $this->input->post('id');
 		$nombre_pro = $this->input->post('nombre_pro');
-		$descripcion = $this->input->post('descripcion');
+		//$descripcion = $this->input->post('descripcion');
 		$precio = $this->input->post('precio');
 		$marca = $this->input->post('marca');
 		//$stock = $this->input->post('stock');
@@ -81,7 +81,7 @@ class Controlador_producto extends CI_Controller {
 		$data = array(
 			'id' => $id,
 			'nombre_pro' => $nombre_pro,
-			'descripcion' => $descripcion,
+			//'descripcion' => $descripcion,
 			'precio' => $precio,
 			'marca' => $marca,
 			//'stock' => $stock,

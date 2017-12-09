@@ -16,7 +16,7 @@
 												<div class="">
 													<div class="col-xs-12 col-md-12" style="background-color:#16246d">
 																<br> <center><h3 style="color:#fff">Productos disponibles</h3></center>
-																<div class="form-group col-xs-12 col-md-4">
+																<div class="form-group col-xs-12 col-md-12">
 																		<select class="form-control" id="productos">
 																			<option value="0">[.::::::::::::Buscar Producto::::::::::::.]</option>
 																		</select>
@@ -48,16 +48,27 @@
 															<div class="col-xs-12 col-sm-4 ">
 																<div class="input-group">
 																  <span class="input-group-addon">Proveedor</span>
-																	<select class="form-control" id="proveedor" name="id_proveedor" size="150" title="Buscar cliente">
+																	<select class="form-control" id="proveedor" name="id_proveedor" size="150" title="Buscar proveedor">
 																		<option value="0">[.::::::::::::Buscar proveedor::::::::::::.]</option>
 																	</select>
-
 																</div>
 															</div>
 															<button class="btn btn-success" type="button" onclick="imprimir_agregar_proveedor()">Agregar proveedor <i class="fa fa-plus"></i></button><br><br>
 															<center>
 																<button type="button" class="btn btn-primary" onclick="guardarNota()" name="button">Guardar Nota de almacen <i class="fa fa-save"></i></button>
-																<a href="<?=base_url()?>index.php/admin/almacenero" class="btn btn-danger">Cancelar Nota</a>
+																<?php
+																	if ($this->session->cargo ==  "Super administrador") {
+																		?>
+																		<a href="<?=base_url()?>index.php/controlador_almacen/stock" class="btn btn-danger">Cancelar Nota</a>
+																		<?php
+																	}
+																	else {
+																		?>
+																		<a href="<?=base_url()?>index.php/admin/almacenero" class="btn btn-danger">Cancelar Nota</a>
+																		<?php
+																	}
+																 ?>
+
 															</center>
 														</div>
 														<div class="table-responsive">
@@ -230,9 +241,7 @@ $.fn.select2.amd.require([
 			"<div class='select2-result-repository__meta'>" +
 				"<div class='select2-result-repository__title'>" + repo.nombre_prov + "</div>";
 
-		if (repo.descripcion) {
-			markup += "<div class='select2-result-repository__description'>" + repo.descripcion + "</div>";
-		}
+
 
 		markup += "<div class='select2-result-repository__statistics'>" +
 			"<div class='select2-result-repository__forks'><i class='fa fa-flash'></i>Direcci&oacute;n: " + repo.direccion_prov + "</div>" +
@@ -283,18 +292,25 @@ $.fn.select2.amd.require([
 	var $producto = $("#productos");
 	function formatRepoProducto (repo) {
 		if (repo.loading) return repo.text;
-		var markup = "<div class='select2-result-repository clearfix'>" +
-			"<div class='select2-result-repository__avatar'></div>" +
-			"<div class='select2-result-repository__meta'>" +
-				"<div class='select2-result-repository__title'>" + repo.nombre_pro + "</div>";
-
+		var markup = "<div class='select2-result-repository clearfix'>" ;
+		if (repo.stock <= 10) {
+			markup += "<div class='select2-result-repository__avatar'><img src='"+base_url+"assets/images/f2.jpg' /></div>";
+		}
+		else {
+			markup += "<div class='select2-result-repository__avatar'><img src='"+base_url+"assets/images/f1.jpg' /></div>";
+		}
+markup += "<div class='select2-result-repository__meta'>" +
+				"<div class='select2-result-repository__title'>" +
+				"<span class='label label-success'>Producto</span>"+repo.nombre_pro +
+				 //" <span class='label label-success'>Descripci&oacute;n</span>: " + repo.descripcion +
+				 "<br><br>	 <span class='label label-primary'>Precio</span>: "+ repo.precio +
+				 "	 <span class='label label-warning'>Marca</span>: " + repo.marca +
+				 "	 <span class='label label-danger'>Stock</span>: " + repo.stock +
+				 "</div>";
 		markup += "<div class='select2-result-repository__statistics'>" +
-			"<div class='select2-result-repository__forks'><i class='fa fa-flash'></i>Descripci&oacute;n: " + repo.descripcion + "</div>" +
-			"<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i>Precio " + repo.precio + " </div><br>" +
-			"<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i>Marca: " + repo.marca + "</div><br>" +
-			"<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i>Stock: " + repo.stock + "</div>" +
 		"</div>" +
 		"</div></div>";
+
 
 		return markup;
 	}
@@ -380,7 +396,7 @@ var agergarALista = function () {
 				var html = "";
 				html +="<tr>"+
 									"<td>"+data.producto[0]["nombre_pro"]+"</td>"+
-									"<td>"+data.producto[0]["descripcion"]+" "+data.producto[0]["marca"]+"</td>";
+									"<td>"+data.producto[0]["marca"]+"</td>";
 										for (var i = 0; i < data.Tunitario.length; i++) {
 											if (data.Tunitario[i]["id"] ==  data.producto[0]["id_tipo_unitario"]) {
 												var tunit = data.Tunitario[i]["nombre_tipo_u"];

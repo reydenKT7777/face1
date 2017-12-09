@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 01-12-2017 a las 18:28:14
+-- Tiempo de generación: 07-12-2017 a las 20:25:42
 -- Versión del servidor: 5.7.20-0ubuntu0.16.04.1
 -- Versión de PHP: 7.0.22-0ubuntu0.16.04.1
 
@@ -40,7 +40,9 @@ CREATE TABLE `almacen` (
 --
 
 INSERT INTO `almacen` (`id_almacen`, `id_sucursal`, `nombre_almacen`, `tipo_almacen`, `direccion`, `estadoA`) VALUES
-(1, 1, 'Cuadernos', 'todo tipo de cuadernos', 'no se', 1);
+(1, 1, 'Primario', 'primordial', 'Calle San Camilo Las Americas', 1),
+(2, 1, 'Margot H.', 'Secundario', 'Depositos Oscuros', 1),
+(3, 1, 'Fidel C.', 'No Frecuente', 'Chifas Saga', 1);
 
 -- --------------------------------------------------------
 
@@ -85,7 +87,9 @@ CREATE TABLE `cliente` (
 
 INSERT INTO `cliente` (`id`, `nombre_cliente`, `nit`, `direccion`, `tipo_cliente`, `telefono`, `correo`, `pass`, `publico`) VALUES
 (1, 'rkt', 100123213, NULL, 'minorista', 76543210, 'unx7777@gmail.com', '202cb962ac59075b964b07152d234b70', b'1'),
-(2, 'Ricardo Acarapi', 87342378, 'no se', 'Minorista', 76543210, 'ricardoacarapi@gmail.com', '', b'0');
+(2, 'Ricardo Acarapi', 87342378, 'no se', 'Minorista', 76543210, 'ricardoacarapi@gmail.com', '', b'0'),
+(3, 'herick', 23456, NULL, 'minorista', 45678, 'echgutierrez@gmail.com', '202cb962ac59075b964b07152d234b70', b'1'),
+(4, 'jennifer llamoca', 14291253, NULL, 'minorista', 2631400, 'jenniferale.17@gmail.com', '202cb962ac59075b964b07152d234b70', b'1');
 
 -- --------------------------------------------------------
 
@@ -109,7 +113,8 @@ CREATE TABLE `contrato` (
 
 INSERT INTO `contrato` (`id`, `id_personal`, `id_tipo_contrato`, `fecha_contrato`, `estado`, `fecha_fin_contrato`, `estadoContrato`) VALUES
 (1, 14, 1, '2017-12-01', b'1', '0000-00-00', b'1'),
-(2, 123, 1, '2017-12-01', b'1', '0000-00-00', b'1');
+(2, 123, 1, '2017-12-01', b'1', '0000-00-00', b'1'),
+(3, 2222, 1, '2017-12-07', b'1', '0000-00-00', b'1');
 
 -- --------------------------------------------------------
 
@@ -131,7 +136,14 @@ CREATE TABLE `detalle_pedido` (
 --
 
 INSERT INTO `detalle_pedido` (`id`, `id_pedido`, `id_producto`, `cantidad`, `total`, `estado`) VALUES
-(1, 1, 1, 100, 1200, 0);
+(1, 1, 1, 100, 1200, 0),
+(2, 2, 1, 150, 1800, 0),
+(3, 3, 3, 500, 1000, 0),
+(4, 3, 3, 100, 200, 0),
+(5, 4, 5, 100, 1500, 0),
+(6, 5, 5, 100, 1500, 0),
+(7, 5, 4, 100, 280, 0),
+(8, 6, 8, 100, 1800, 0);
 
 -- --------------------------------------------------------
 
@@ -154,7 +166,14 @@ CREATE TABLE `detalle_pedido_cli` (
 
 INSERT INTO `detalle_pedido_cli` (`id`, `nro_pedido`, `id_producto`, `cantidad`, `total`, `estado`) VALUES
 (1, 1, 1, 2, 24, 1),
-(2, 2, 1, 20, 240, 1);
+(2, 2, 1, 20, 240, 1),
+(3, 3, 1, 12, 144, 1),
+(4, 3, 1, 55, 660, 1),
+(5, 4, 1, 54, 648, 1),
+(6, 4, 1, 10, 120, 1),
+(7, 5, 1, 30, 360, 1),
+(8, 5, 1, 10, 120, 1),
+(9, 6, 1, 12, 144, 1);
 
 -- --------------------------------------------------------
 
@@ -229,7 +248,14 @@ CREATE TABLE `historial_egreso_producto` (
 
 INSERT INTO `historial_egreso_producto` (`id`, `id_producto`, `cantidad`, `fecha_egreso`, `hora_egreso`, `id_personal`) VALUES
 (1, 1, 2, '2017-12-01', '18:05:40', 123),
-(2, 1, 20, '2017-12-01', '18:14:40', 123);
+(2, 1, 20, '2017-12-01', '18:14:40', 123),
+(3, 1, 54, '2017-12-07', '15:50:21', 123),
+(4, 1, 10, '2017-12-07', '15:50:22', 123),
+(5, 1, 30, '2017-12-07', '16:49:54', 123),
+(6, 1, 10, '2017-12-07', '16:49:54', 123),
+(7, 1, 12, '2017-12-07', '17:02:25', 123),
+(8, 1, 12, '2017-12-07', '17:03:31', 123),
+(9, 1, 55, '2017-12-07', '17:03:32', 123);
 
 -- --------------------------------------------------------
 
@@ -251,7 +277,14 @@ CREATE TABLE `historial_ingreso_producto` (
 --
 
 INSERT INTO `historial_ingreso_producto` (`id`, `id_producto`, `cantidad`, `fecha_ingreso`, `hora_ingreso`, `id_personal`) VALUES
-(1, 1, 100, '2017-12-01', '18:02:45', 321);
+(1, 1, 100, '2017-12-01', '18:02:45', 321),
+(2, 1, 150, '2017-12-07', '15:38:16', 321),
+(3, 3, 500, '2017-12-07', '17:23:16', 321),
+(4, 3, 100, '2017-12-07', '17:23:16', 321),
+(5, 5, 100, '2017-12-07', '17:26:11', 321),
+(6, 5, 100, '2017-12-07', '17:27:10', 321),
+(7, 4, 100, '2017-12-07', '17:27:10', 321),
+(8, 8, 100, '2017-12-07', '19:20:16', 321);
 
 -- --------------------------------------------------------
 
@@ -290,7 +323,11 @@ CREATE TABLE `nota_venta` (
 
 INSERT INTO `nota_venta` (`id`, `id_personal`, `nro_pedido`, `fecha_venta`, `monto_total`, `tipo_venta`, `fecha_limite`, `montoPendiente`) VALUES
 (1, 123, 1, '2017-12-01', 24, 'Al contado', '0000-00-00', 0),
-(2, 123, 2, '2017-12-01', 240, 'Al contado', '0000-00-00', 0);
+(2, 123, 2, '2017-12-01', 240, 'Al contado', '0000-00-00', 0),
+(3, 123, 4, '2017-12-07', 768, 'Al contado', '0000-00-00', 768),
+(4, 123, 5, '2017-12-07', 480, 'Al contado', '0000-00-00', 480),
+(5, 123, 6, '2017-12-07', 144, 'Al contado', '0000-00-00', 144),
+(6, 123, 3, '2017-12-07', 804, 'Al contado', '0000-00-00', 804);
 
 -- --------------------------------------------------------
 
@@ -375,7 +412,11 @@ CREATE TABLE `pedido_cli` (
 
 INSERT INTO `pedido_cli` (`nro_pedido`, `id_sucursal`, `id_cliente`, `fecha_pedido`, `monto`, `estado`) VALUES
 (1, 1, 2, '2017-12-01', 24, 1),
-(2, 1, 1, '2017-12-01', 240, 1);
+(2, 1, 1, '2017-12-01', 240, 1),
+(3, 1, 3, '2017-12-01', 804, 1),
+(4, 1, 3, '2017-12-07', 768, 1),
+(5, 1, 3, '2017-12-07', 480, 1),
+(6, 1, 3, '2017-12-07', 144, 1);
 
 -- --------------------------------------------------------
 
@@ -397,7 +438,12 @@ CREATE TABLE `pedido_prov` (
 --
 
 INSERT INTO `pedido_prov` (`id`, `id_proveedor`, `fecha_pedido`, `nro_pedido`, `monto_total`, `estado`) VALUES
-(1, 1, '2017-12-01', 1, 1200, b'0');
+(1, 1, '2017-12-01', 1, 1200, b'0'),
+(2, 2, '2017-12-07', 2, 1800, b'0'),
+(3, 3, '2017-12-07', 3, 1200, b'0'),
+(4, 3, '2017-12-07', 4, 1500, b'0'),
+(5, 3, '2017-12-07', 5, 1780, b'0'),
+(6, NULL, '2017-12-07', 6, 1800, b'0');
 
 -- --------------------------------------------------------
 
@@ -427,7 +473,9 @@ INSERT INTO `personal` (`ci`, `nombres`, `apellidos`, `fecha_nacimiento`, `celul
 (14, 'Jhennyfer', 'Llamoca', '1990-08-27', 765438, 'no se', 'Super administrador', '14', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
 (123, 'no se ', 'no se', '2017-12-01', 76543210, 'no se', 'Vendedor', '123', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
 (321, 'no se', 'no se', '2017-12-01', 76543210, 'no se', 'Almacenero', '321', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
-(4444, 'cajero', 'cajero', '2017-12-01', 764723, 'no se', 'Cajero', '4444', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1');
+(2222, 'Luis ', 'chambi guterrez', '1990-12-07', 74009595, 'El alto Cosmos 72 Nro 889', 'Vendedor', '2222', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
+(4444, 'cajero', 'cajero', '2017-12-01', 764723, 'no se', 'Cajero', '4444', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
+(14291253, 'alejandra', 'condori', '1990-11-07', 74085867, 'zopocachi Nro 505', 'Vendedor', 'patita', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1');
 
 -- --------------------------------------------------------
 
@@ -453,7 +501,17 @@ CREATE TABLE `producto` (
 --
 
 INSERT INTO `producto` (`id`, `nombre_pro`, `descripcion`, `precio`, `marca`, `stock`, `id_tipo_producto`, `id_tipo_unitario`, `id_almacen`, `estadoPro`) VALUES
-(1, 'Empastados', 'Cuadernos empastados tamaño carta', 12, 'TOP', 78, 1, 1, 1, b'1');
+(1, 'Empastados', 'Cuadernos empastados tamaño carta', 12, 'TOP', 45, 1, 1, 1, b'1'),
+(2, 'cuadernos X100 NORMA', 'cuadernos X100 NORMA', 9, 'NORMA', 0, 1, 2, 1, b'1'),
+(3, 'COLORES JUMBO-FC', 'COLORES JUMBO-FC', 2, 'FABERCASTELL', 600, 3, 2, 1, b'1'),
+(4, 'TAJADOR MEDIAÑO', 'TAJADOR MEDIANO-ARTESCO', 2.8, 'ARTESCO', 100, 5, 2, 1, b'1'),
+(5, 'ENGRANPADORA-ARTESCO', 'ENGRAMPADORA-GRAND-ARTESCO', 15, 'ARTESCO', 200, 6, 5, 1, b'1'),
+(6, 'pintura para dedo', 'pintura para dedo X6', 15, 'Apu', 0, 1, 1, 1, b'1'),
+(7, 'PERFORADOR ', 'PERFORADORA-PEQU-FC', 5, 'FABERCASTELL', 0, 6, 6, 1, b'1'),
+(8, 'colores ', 'colores acuarelables X12 ', 18, 'Stanfords', 100, 3, 1, 1, b'1'),
+(9, 'colores X6', 'COLORES X6 semi grasoso', 12, 'faber castell', 0, 3, 6, 1, b'1'),
+(10, 'colores X24', 'colores X24 acuarelables ', 24, 'faber castell', 0, 3, 6, 1, b'1'),
+(11, 'colores X24', 'colores X24 acuarelables ', 24, 'faber castell', 0, 3, 6, 1, b'1');
 
 -- --------------------------------------------------------
 
@@ -477,7 +535,10 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`id`, `nombre_prov`, `direccion_prov`, `telefono_prov`, `nit`, `nombre_encargado`, `correo`, `estado`) VALUES
-(1, 'Top', 'no me acuerdo', 73242831, 9300012, 'Juanito Perez ', 'top_lider@gmail.com', b'1');
+(1, 'Top', 'no me acuerdo', 73242831, 9300012, 'Juanito Perez ', 'top_lider@gmail.com', b'1'),
+(2, 'otro', 'no se ', 76543210, 100012, 'Juanito Perez', 'ntc@gmail.com', b'1'),
+(3, 'LAYCONSA S.A.', 'BOLIVIA - COCHABAMBA- AV. EDWIN-ESQUINA.RICON', 2222929, 2293948, 'ALAJANDRA', 'ALEJANDRA@GMAIL.COM', b'1'),
+(4, 'TAYLOY', 'LA PAZ ', 22232, 234343, 'jorge macheco', 'jorge-@gmail.com', b'1');
 
 -- --------------------------------------------------------
 
@@ -544,7 +605,12 @@ CREATE TABLE `tipo_producto` (
 --
 
 INSERT INTO `tipo_producto` (`id`, `nombre_tipo_p`, `estadoTP`) VALUES
-(1, 'Cuadernos', b'1');
+(1, 'Cuadernos', b'1'),
+(2, 'acrilex', b'1'),
+(3, 'colores', b'1'),
+(4, 'PAPEL', b'1'),
+(5, 'TAJADOR', b'1'),
+(6, 'OFICINA', b'1');
 
 -- --------------------------------------------------------
 
@@ -563,7 +629,13 @@ CREATE TABLE `tipo_unitario` (
 --
 
 INSERT INTO `tipo_unitario` (`id`, `nombre_tipo_u`, `estadoTU`) VALUES
-(1, 'Caja', b'1');
+(1, 'Caja', b'1'),
+(2, 'Millar', b'1'),
+(3, 'DOCENA', b'1'),
+(4, 'Metro', b'1'),
+(5, 'Ciento', b'1'),
+(6, 'UND', b'1'),
+(7, 'UND', b'1');
 
 --
 -- Índices para tablas volcadas
@@ -748,7 +820,7 @@ ALTER TABLE `tipo_unitario`
 -- AUTO_INCREMENT de la tabla `almacen`
 --
 ALTER TABLE `almacen`
-  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `caja`
 --
@@ -758,22 +830,22 @@ ALTER TABLE `caja`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido_cli`
 --
 ALTER TABLE `detalle_pedido_cli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT de la tabla `historial_caja_egreso`
 --
@@ -788,12 +860,12 @@ ALTER TABLE `historial_caja_ingreso`
 -- AUTO_INCREMENT de la tabla `historial_egreso_producto`
 --
 ALTER TABLE `historial_egreso_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT de la tabla `historial_ingreso_producto`
 --
 ALTER TABLE `historial_ingreso_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT de la tabla `nota_ingreso`
 --
@@ -803,7 +875,7 @@ ALTER TABLE `nota_ingreso`
 -- AUTO_INCREMENT de la tabla `nota_venta`
 --
 ALTER TABLE `nota_venta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `pago_contrato`
 --
@@ -823,22 +895,22 @@ ALTER TABLE `pago_pedido`
 -- AUTO_INCREMENT de la tabla `pedido_cli`
 --
 ALTER TABLE `pedido_cli`
-  MODIFY `nro_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `nro_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `pedido_prov`
 --
 ALTER TABLE `pedido_prov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT de la tabla `sucursal`
 --
@@ -853,12 +925,12 @@ ALTER TABLE `tipo_contrato`
 -- AUTO_INCREMENT de la tabla `tipo_producto`
 --
 ALTER TABLE `tipo_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `tipo_unitario`
 --
 ALTER TABLE `tipo_unitario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- Restricciones para tablas volcadas
 --

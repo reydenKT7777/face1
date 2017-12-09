@@ -203,12 +203,7 @@ class VentaPedido extends CI_Controller{
 			redirect(base_url()."index.php/admin/login",'refresh');
 		}
 	}
-  function acentos($cadena) {
-    $buscar = explode(",","á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ,Ã¡,Ã©,Ã­,Ã&sup3;,Ãº,Ã±,ÃÃ¡,ÃÃ©,ÃÃ­,ÃÃ&sup3;,ÃÃº,ÃÃ±");
-    $cambiar = explode(",","á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ,á,é,í,ó,ú,ñ,Á,É,Í,Ó,Ú,Ñ");
-    $textocorregido= str_replace($buscar, $cambiar, $cadena);
-    return $textocorregido;
-    }
+
   public function reportePDF()
   {
 		$idd = $this->input->get("id");
@@ -290,7 +285,7 @@ class VentaPedido extends CI_Controller{
 			// se imprime el numero actual y despues se incrementa el valor de $x en uno
       $this->pdf->Cell(5,5,$x++,'BL',0,'C',0);
       // Se imprimen los datos de cada alumno
-      $this->pdf->Cell(130,5,utf8_decode($row->nombre_pro)." ".utf8_decode($row->descripcion)." ".utf8_decode($row->marca),'B',0,'L',0);
+      $this->pdf->Cell(130,5,utf8_decode($row->nombre_pro).utf8_decode($row->marca),'B',0,'L',0);
       //$this->pdf->Cell(25,5,$row->cod_item,'B',0,'L',0);
       $this->pdf->Cell(20,5,$row->cantidad,'B',0,'L',0);
       //$this->pdf->Cell(20,5,$row->peso_item." ".$row->tipo_unitario,'B',0,'L',0);
