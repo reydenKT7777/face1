@@ -172,20 +172,40 @@ $(document).ready(function() {
     }
   });
   var buscarNotas = function () {
+    var id = $('#cliente').val();
     $.ajax({
-      url: 'index.php/controlad',
-      type: 'default GET (Other values: POST)',
-      dataType: 'default: Intelligent Guess (Other values: xml, json, script, or html)',
-      data: {param1: 'value1'}
-    })
-    .done(function() {
-      console.log("success");
-    })
-    .fail(function() {
-      console.log("error");
-    })
-    .always(function() {
-      console.log("complete");
+      url: base_url+'index.php/ventaPedido/buscarClientes',
+      type: 'POST',
+      dataType: 'json',
+      data: {idCliente: id},
+      success:function (data) {
+        var html = "";
+        html += '<table class="table table-striped">'+
+          '<thead>'+
+            '<th>#</th>'+
+            '<th>Nro nota</th>'+
+            '<th>Fecha Venta</th>'+
+            '<th>Cliente</th>'+
+            '<th>CI</th>'+
+            '<th>Total</th>'+
+          '</thead>'+
+          '<tbody>';
+          for (var i = 0; i < data.length; i++) {
+            html += '<tr>';
+              html += '<td>'+(i+1)+'</td>';
+              html += '<td>'+data[i]["nro_pedido"]+'</td>';
+              html += '<td>'+data[i]["fecha_venta"]+'</td>';
+              html += '<td>'+data[i]["nombre_cliente"]+'</td>';
+              html += '<td>'+data[i]["nit"]+'</td>';
+              html += '<td>'+data[i]["monto_total"]+'</td>';
+              html += '<td><a target="_blank" class="btn btn-info" href="'+base_url+'/index.php/ventaPedido/reportePDF?id='+data[i]["nro_pedido"]+'"><i class="fa fa-eye"></i></a></td>';
+            html += '</tr>';
+          }
+  html += '</tbody>'+
+        '</table>';
+        html += '<a href="'+base_url+'index.php/ventaPedido/verReporteTotal?idCliente='+id+'" target="_blank" class="btn btn-success">Ver todo el repo  <i class="fa fa-eye"></i></a>';
+        $('#resultado').html(html);
+      }
     });
 
   }

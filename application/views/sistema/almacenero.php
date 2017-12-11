@@ -397,12 +397,7 @@ var agergarALista = function () {
 				html +="<tr>"+
 									"<td>"+data.producto[0]["nombre_pro"]+"</td>"+
 									"<td>"+data.producto[0]["marca"]+"</td>";
-										for (var i = 0; i < data.Tunitario.length; i++) {
-											if (data.Tunitario[i]["id"] ==  data.producto[0]["id_tipo_unitario"]) {
-												var tunit = data.Tunitario[i]["nombre_tipo_u"];
-											}
-										}
-					html += "<td>"+cantidad+" "+tunit+"s</td>"+
+					html += "<td>"+cantidad+"s</td>"+
 									"<td>"+data.producto[0]["precio"]+"</td>"+
 									"<td>"+total+"</td>"+
 									'<input type="hidden" name="producto[]" value="'+data.producto[0]["id"]+'">'+

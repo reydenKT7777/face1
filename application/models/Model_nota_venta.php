@@ -116,4 +116,14 @@ class Model_nota_venta extends CI_Model {
 													where p.nro_pedido=$id");
 		return $r->result();
 	}
+	public function buscarCliente($idCliente)
+	{
+		$r = $this->db->query("SELECT c.nombre_cliente,c.nit,n.monto_total,n.fecha_venta,n.nro_pedido,n.montoPendiente
+											FROM nota_venta n
+											INNER JOIN pedido_cli pc on pc.nro_pedido = n.nro_pedido
+											INNER JOIN cliente c on c.id = pc.id_cliente
+											WHERE c.id = $idCliente
+											");
+		return $r->result();
+	}
 }

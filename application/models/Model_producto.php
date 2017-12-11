@@ -3,12 +3,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Model_producto extends CI_Model {
 	public function listar_producto($id)
 	{
-		$query = $this->db->query('select s.nombre as ns,p.*,tp.nombre_tipo_p, tu.nombre_tipo_u, a.nombre_almacen
+		$query = $this->db->query('select s.nombre as ns,p.*,tp.nombre_tipo_p, a.nombre_almacen
 														from
-														producto p, tipo_producto tp, tipo_unitario tu, almacen a, sucursal s
+														producto p, tipo_producto tp, almacen a, sucursal s
 														where
 														p.id_tipo_producto = tp.id and
-														p.id_tipo_unitario = tu.id and
 														p.id_almacen = a.id_almacen and
 														a.id_sucursal = '.$id.' and
 														s.id = a.id_sucursal'
@@ -24,6 +23,7 @@ class Model_producto extends CI_Model {
 	{
 		$this->db->set($data);
 		$this->db->insert('producto');
+		return $this->db->insert_id();
 	}
 	public function modificar_producto($id,$data)
 	{
@@ -95,5 +95,13 @@ class Model_producto extends CI_Model {
 									'id_personal' => $this->session->ci
 	 									);
 		$this->db->insert('historial_egreso_producto', $data);
+	}
+	public function buscar_ptu($idProducto)
+	{
+		$r = $this->db->query("select *
+													FROM precioTipoU p
+													INNER JOIN tipo_unitario t ON t.id = p.id_tipo_unitario
+													where p.id_producto = $idProducto");
+		return $r->result();
 	}
 }

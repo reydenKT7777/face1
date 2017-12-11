@@ -241,10 +241,12 @@
            </div>
        </div>
 <!--====================================================================-->
+
 <script>
 var base_url = '<?=base_url()?>';
 $(document).ready(function() {
   mostrarSucursales();
+  imprime_lista_producto(<?=$this->session->id_sucursal?>);
 });
 
 var ver = function (id) {
@@ -276,6 +278,7 @@ var mostrarSucursales = function () {
 }
 // Funcion que imprime la lista de registos de l atabla producto
 var iddPro = 0;
+var iddProPro = 0;
 var imprime_lista_producto = function(id) {
   iddPro = id;
 	$.ajax({
@@ -324,8 +327,6 @@ var imprime_tabla_producto = function(data) {
 				html += '<tr>';
 					html += '<th>Sucursal</th>';
 					html += '<th>Producto</th>';
-					html += '<th>Descripcion</th>';
-					html += '<th>Precio unitario</th>';
 					html += '<th>Marca</th>';
 					html += '<th>stock</th>';
 					html += '<th>Tipo producto</th>';
@@ -339,10 +340,13 @@ var imprime_tabla_producto = function(data) {
 				html += '<tr>';
 			    html += '<td><span class="label label-default">'+data[i]['ns']+'</span></td>';
 			    html += '<td>'+data[i]['nombre_pro']+'</td>';
-			    html += '<td>'+data[i]['descripcion']+'</td>';
-			    html += '<td>'+data[i]['precio']+'</td>';
 			    html += '<td>'+data[i]['marca']+'</td>';
-			    html += '<td>'+data[i]['stock']+' '+data[i]['nombre_tipo_u']+'</td>';
+          if (data[i]['stock'] <= 10) {
+              html += '<td class="danger">'+data[i]['stock']+'</td>';
+          }
+			    else {
+			      html += '<td class="success">'+data[i]['stock']+'</td>';
+			    }
 			    html += '<td>'+data[i]['nombre_tipo_p']+'</td>';
 			    html += '<td>'+data[i]['nombre_almacen']+'</td>';
 			    html += '<td>';
@@ -400,22 +404,24 @@ var imprimir_agregar_producto = function() {
 
 }
 var agregar_producto = function () {
-	var formdata = new FormData($("#formulario_i_producto")[0]);
-
-	$.ajax({
-  	  url: base_url+'/index.php/controlador_producto/agregar_datos',
-      type: 'POST',
-      data: formdata,
-      contentType: false,
-      processData: false,
-      success: function(){
-       $('.modal_agregar_datos_producto').modal('hide');
-	     $('.formulario_crear_producto').empty();
-	     imprime_lista_producto(iddPro);
-       alert("producto añadido, verifique la existencia en la sucursal a la que añadio!!");
-      }
-  	});
+	if (confirm("Esta seguro que desea guardar en productos?")) {
+    var formdata = new FormData($("#formulario_i_producto")[0]);
+  	$.ajax({
+    	  url: base_url+'/index.php/controlador_producto/agregar_datos',
+        type: 'POST',
+        data: formdata,
+        contentType: false,
+        processData: false,
+        success: function(){
+         $('.modal_agregar_datos_producto').modal('hide');
+  	     $('.formulario_crear_producto').empty();
+  	     imprime_lista_producto(iddPro);
+         alert("producto añadido, verifique la existencia en la sucursal a la que añadio!!");
+        }
+    	});
+	}
 }
+var tipoUnit = new Array();
 var imprime_formulario_ingreso_producto = function(data) {
 	var html ='';
 	//var data = 0;
@@ -439,14 +445,6 @@ var imprime_formulario_ingreso_producto = function(data) {
 		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='nombre_pro' class='form-control' id='nombre_pro'></div>";
 		  	html += "</div>";
 			html+= "<div class='form-group'>";
-		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>Descripcion</label>";
-		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='descripcion' class='form-control' id='descripcion'></div>";
-		  	html += "</div>";
-			html+= "<div class='form-group'>";
-		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>Precio unitario</label>";
-		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='precio' class='form-control' id='precio'></div>";
-		  	html += "</div>";
-			html+= "<div class='form-group'>";
 		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>Marca</label>";
 		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='marca' class='form-control' id='marca'></div>";
 		  html += "</div>";
@@ -458,21 +456,71 @@ var imprime_formulario_ingreso_producto = function(data) {
 							}
 						html += "</select></div>";
 		  html += "</div>";
-			html+= "<div class='form-group'>";
-		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>Tipo unitario</label>";
-		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><select name='id_tipo_unitario' class='form-control' id='id_tipo_unitario'>";
-							for (var i = 0; i < data.Tunitario.length; i++) {
-								html+= "<option value='"+data.Tunitario[i]["id"]+"'>"+data.Tunitario[i]["nombre_tipo_u"]+"</option>";
-							}
-						html += "</select></div>";
+      html+= "<div class='form-group'>";
+		    	html +=	"<div class='col-md-4 col-sm-4 col-xs-12'>";
+            html += "<select name='id_tipo_unitario' class='form-control' id='id_tipo_unitario'>";
+              for (var i = 0; i < data.Tunitario.length; i++) {
+                html+= "<option value='"+i+"'>"+data.Tunitario[i]["nombre_tipo_u"]+"</option>";
+              }
+            html += "</select>";
+            html += '<input type="text" name="cantidad_tipo_unitario" id="cantidad_tipo_unitario" value="" placeholder="Cantidad." class="form-control" title="Cantidad">';
+            html += '<input type="text" name="precio_unitario" id="precio_unitario" value="" placeholder="Precio U." class="form-control" onkeyup="calcularPTU()" title="Precio unitario">';
+            html += '<input type="text" name="precio_tipo_unitario" id="precio_tipo_unitario" value="" placeholder="Precio/T/U" class="form-control" onkeyup="calcularPU()" title="Precio del Tipo Unitarios">';
+            html += '<button type="button" onclick="addTipoU()" name="button" class="btn btn-primary btn-block">Agregar <i class="fa fa-plus-circle"></i></button>';
+          html += "</div>";
+		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'>";
+          html += '<table class="table table-striped">'+
+            '<thead>'+
+              '<tr>'+
+                '<th>T/U</th>'+
+                '<th>Cantidad</th>'+
+                '<th>P/Unitario</th>'+
+                '<th>Precio/T/U</th>'+
+              '</tr>'+
+            '</thead>'+
+            '<tbody id="listaUnitarios">'  +
+            '</tbody>'+
+          '</table>';
+          html += "</div>";
 		  html += "</div>";
-
 		html += "</form>";
+    tipoUnit = data.Tunitario;
 	}
 	else{
 		html += "<h1>No se encontraron registros!!</h1>";
 	}
 	return html;
+}
+var addTipoU = function () {
+  var html = "";
+  var id = $('#id_tipo_unitario').val();
+  var precio_unitario = $('#precio_unitario').val();
+  var cantidad_tipo_unitario = $('#cantidad_tipo_unitario').val();
+  var precio_tipo_unitario = $('#precio_tipo_unitario').val();
+  html += '<tr>';
+    html += '<td><input type="hidden" name="id_tipo_unitario[]" value="'+tipoUnit[id]["id"]+'">'+tipoUnit[id]["nombre_tipo_u"]+'</td>';
+    html += '<td><input type="hidden" name="cantidad[]" value="'+cantidad_tipo_unitario+'">'+cantidad_tipo_unitario+'</td>';
+    html += '<td><input type="hidden" name="PUnitario[]" value="'+precio_unitario+'">'+precio_unitario+'</td>';
+    html += '<td><input type="hidden" name="PTUnitario[]" value="'+precio_tipo_unitario+'">'+precio_tipo_unitario+'</td>';
+  html += '</tr>';
+  $('#listaUnitarios').append(html);
+  $('#precio_unitario').val("");
+  $('#cantidad_tipo_unitario').val("");
+  $('#precio_tipo_unitario').val("");
+}
+var calcularPTU = function () {
+
+  var precio_unitario = $('#precio_unitario').val();
+  var cantidad_tipo_unitario = $('#cantidad_tipo_unitario').val();
+  totalPTU = (precio_unitario * 1) * (cantidad_tipo_unitario * 1);
+  $('#precio_tipo_unitario').val(totalPTU.toFixed(2));
+
+}
+var calcularPU = function () {
+  var precio_tipo_unitario = $('#precio_tipo_unitario').val();
+  var cantidad_tipo_unitario = $('#cantidad_tipo_unitario').val();
+  totalPU = (precio_tipo_unitario * 1) / (cantidad_tipo_unitario * 1);
+  $('#precio_unitario').val(totalPU.toFixed(2));
 }
 var cancelar_agregar_producto = function () {
 	$('.modal_agregar_datos_producto').modal('hide');
@@ -480,6 +528,7 @@ var cancelar_agregar_producto = function () {
 }
 //funcones para modificar datos de producto
 var mostrar_modificar_producto = function (id) {
+  iddProPro = id;
 	$('.modal_modificar_datos_producto').modal('show');
 	$.ajax({
 		url: base_url+'index.php/controlador_producto/buscar_producto',
@@ -521,14 +570,6 @@ var imprime_formulario_modificar_producto = function(data) {
 		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='nombre_pro' class='form-control' id='nombre_pro' value= '"+data.producto[i]['nombre_pro']+"'></div>";
 		  	html += "</div>";
 				html+= "<div class='form-group'>";
-		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>descripcion</label>";
-		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='descripcion' class='form-control' id='descripcion' value= '"+data.producto[i]['descripcion']+"'></div>";
-		  	html += "</div>";
-				html+= "<div class='form-group'>";
-		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>precio</label>";
-		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='precio' class='form-control' id='precio' value= '"+data.producto[i]['precio']+"'></div>";
-		  	html += "</div>";
-				html+= "<div class='form-group'>";
 		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>Marca</label>";
 		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='marca' class='form-control' id='marca' value= '"+data.producto[i]['marca']+"'></div>";
 		  	html += "</div>";
@@ -546,26 +587,77 @@ var imprime_formulario_modificar_producto = function(data) {
 					}
 					html += "</select></div>";
 		  	html += "</div>";
-
-				html+= "<div class='form-group'>";
-		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>Tipo unitario</label>";
-		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><select type='text' name='id_tipo_unitario' class='form-control' id='id_tipo_producto' value= ''>";
-					for (var j = 0; j < data.Tunitario.length; j++) {
-						if (data.Tunitario[j]['id'] == data.producto[i]["id_tipo_unitario"]) {
-							html += "<option value='"+data.Tunitario[j]['id']+"' selected>"+data.Tunitario[j]['nombre_tipo_u']+"</option>";
-						}
-						else {
-							html += "<option value='"+data.Tunitario[j]['id']+"'>"+data.Tunitario[j]['nombre_tipo_u']+"</option>";
-						}
-					}
-					html += "</select></div>";
-		  	html += "</div>";
+        html+= "<div class='form-group'>";
+  		    	html +=	"<div class='col-md-3 col-sm-3 col-xs-12'>";
+              html += "<select name='id_tipo_unitario' class='form-control' id='id_tipo_unitario'>";
+                for (var i = 0; i < data.Tunitario.length; i++) {
+                  html+= "<option value='"+i+"'>"+data.Tunitario[i]["nombre_tipo_u"]+"</option>";
+                }
+              html += "</select>";
+              html += '<input type="text" name="cantidad_tipo_unitario" id="cantidad_tipo_unitario" value="" placeholder="Cantidad." class="form-control" title="Cantidad">';
+              html += '<input type="text" name="precio_unitario" id="precio_unitario" value="" placeholder="Precio U." class="form-control" onkeyup="calcularPTU()" title="Precio unitario">';
+              html += '<input type="text" name="precio_tipo_unitario" id="precio_tipo_unitario" value="" placeholder="Precio/T/U" class="form-control" onkeyup="calcularPU()" title="Precio del Tipo Unitarios">';
+              html += '<button type="button" onclick="addTipoUN()" name="button" class="btn btn-primary btn-block">Agregar <i class="fa fa-plus-circle"></i></button>';
+            html += "</div>";
+  		    	html += "<div class='col-md-9 col-sm-9 col-xs-12'>";
+            html += '<table class="table table-striped">'+
+              '<thead>'+
+                '<tr>'+
+                  '<th>T/U</th>'+
+                  '<th>Cantidad</th>'+
+                  '<th>P/Unitario</th>'+
+                  '<th>Precio/T/U</th>'+
+                  '<th></th>'+
+                '</tr>'+
+              '</thead>'+
+              '<tbody id="listaUnitarios">';
+                  for (var i = 0; i < data.ptu.length; i++) {
+                    html += '<tr>';
+                      html += '<td><input type="hidden" name="idPrecioTipoU[]" value="'+data.ptu[i]["idPrecioTipoU"]+'">'+data.ptu[i]["nombre_tipo_u"]+'</td>';
+                      html += '<td><input type="text" class="form-control" id="cantidad'+i+'" name="cantidad[]" value="'+data.ptu[i]["cantidadTU"]+'"></td>';
+                      html += '<td><input type="text" class="form-control" id="PUnitario'+i+'" onkeyup="calcularPTUup('+i+')" name="PUnitario[]" value="'+data.ptu[i]["precioU"]+'"></td>';
+                      html += '<td><input type="text" class="form-control" id="PTUnitario'+i+'" onkeyup="calcularPUup('+i+')" name="PTUnitario[]" value="'+data.ptu[i]["ptunitario"]+'"></td>';
+                      if (data.ptu[i]["estadoPTU"] == '1') {
+                          html += '<td><button type="button" name="button" class="btn btn-danger btn-xs" title="Dar baja" onclick="darBajaTU('+data.ptu[i]["idPrecioTipoU"]+')"><i class="fa fa-arrow-down"></i></button></td>';
+                      }
+                      else {
+                        html += '<td><button type="button" name="button" class="btn btn-success btn-xs" title="Dar Alta" onclick="darAltaTU('+data.ptu[i]["idPrecioTipoU"]+')"><i class="fa fa-arrow-up"></i></button></td>';
+                      }
+                    html += '</tr>';
+                  }
+      html += '</tbody>'+
+            '</table>';
+            html += "</div>";
+  		  html += "</div>";
 		html += "</form>";
+    tipoUnit = data.Tunitario;
 	}
 	else{
 		html += "<h1>No se encontraron registros!!</h1>";
 	}
 	return html;
+}
+var darBajaTU = function (id) {
+  if (confirm("Esta seguro de dar de baja a este tipo de unidad?")) {
+    $.ajax({
+      url: base_url+'index.php/controlador_producto/darBajaTU',
+      type: 'POST',
+      dataType: 'json',
+      data: {idTU: id}
+    });
+    mostrar_modificar_producto(iddProPro);
+  }
+}
+var darAltaTU = function (id) {
+  if (confirm("Esta seguro de dar de Alta a este tipo de unidad?")) {
+    $.ajax({
+      url: base_url+'index.php/controlador_producto/darAltaTU',
+      type: 'POST',
+      dataType: 'json',
+      data: {idTU: id}
+    });
+    mostrar_modificar_producto(iddProPro);
+  }
 }
 var modificar_producto = function() {
 	var formdata = new FormData($("#formulario_m_producto")[0]);
@@ -585,6 +677,37 @@ var modificar_producto = function() {
 var cancelar_modificar_producto = function () {
 	$('.modal_modificar_datos_producto').modal('hide');
 	$('.formulario_modificar_producto').empty();
+}
+var addTipoUN = function () {
+  var html = "";
+  var id = $('#id_tipo_unitario').val();
+  var precio_unitario = $('#precio_unitario').val();
+  var cantidad_tipo_unitario = $('#cantidad_tipo_unitario').val();
+  var precio_tipo_unitario = $('#precio_tipo_unitario').val();
+  html += '<tr>';
+    html += '<td><input type="hidden" name="id_tipo_unitarioN[]" value="'+tipoUnit[id]["id"]+'">'+tipoUnit[id]["nombre_tipo_u"]+'</td>';
+    html += '<td><input type="hidden" name="cantidadN[]" value="'+cantidad_tipo_unitario+'">'+cantidad_tipo_unitario+'</td>';
+    html += '<td><input type="hidden" name="PUnitarioN[]" value="'+precio_unitario+'">'+precio_unitario+'</td>';
+    html += '<td><input type="hidden" name="PTUnitarioN[]" value="'+precio_tipo_unitario+'">'+precio_tipo_unitario+'</td>';
+  html += '</tr>';
+  $('#listaUnitarios').append(html);
+  $('#precio_unitario').val("");
+  $('#cantidad_tipo_unitario').val("");
+  $('#precio_tipo_unitario').val("");
+}
+var calcularPTUup = function (index) {
+
+  var precio_unitario = $('#PUnitario'+index).val();
+  var cantidad_tipo_unitario = $('#cantidad'+index).val();
+  totalPTU = (precio_unitario * 1) * (cantidad_tipo_unitario * 1);
+  $('#PTUnitario'+index).val(totalPTU.toFixed(2));
+
+}
+var calcularPUup = function (index) {
+  var precio_tipo_unitario = $('#PTUnitario'+index).val();
+  var cantidad_tipo_unitario = $('#cantidad'+index).val();
+  totalPU = (precio_tipo_unitario * 1) / (cantidad_tipo_unitario * 1);
+  $('#PUnitario'+index).val(totalPU.toFixed(2));
 }
 //funciones para eliminar datos producto
 var id_auxproducto = 0
