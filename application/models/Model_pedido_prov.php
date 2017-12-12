@@ -38,4 +38,19 @@ class Model_pedido_prov extends CI_Model {
 		$r = $this->db->query("select max(`nro_pedido`) as max from pedido_prov");
 		return $r->row();
 	}
+	public function reportePedido($id)
+	{
+		$r = $this->db->query("SELECT
+											prov.nombre_prov,prov.nit,
+											p.fecha_pedido,p.nro_pedido,p.monto_total,p.monto_pendiente,
+											pro.nombre_pro,tu.nombre_tipo_u,d.cantidadTU,d.precioTU,d.total
+											FROM pedido_prov p
+											 INNER JOIN detalle_pedido d ON d.id_pedido = p.id
+											 INNER JOIN proveedor prov ON prov.id = p.id_proveedor
+											 INNER JOIN producto pro ON pro.id = d.id_producto
+											 INNER JOIN precioTipoU ptu ON ptu.idPrecioTipoU = d.idPrecioTipoU
+											 INNER JOIN tipo_unitario tu ON tu.id = ptu.id_tipo_unitario
+											WHERE p.id = $id");
+		return $r->result();
+	}
 }
