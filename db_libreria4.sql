@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Servidor: localhost
--- Tiempo de generación: 07-12-2017 a las 20:25:42
+-- Tiempo de generación: 12-12-2017 a las 17:07:57
 -- Versión del servidor: 5.7.20-0ubuntu0.16.04.1
 -- Versión de PHP: 7.0.22-0ubuntu0.16.04.1
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `db_libreria3`
+-- Base de datos: `db_libreria4`
 --
 
 -- --------------------------------------------------------
@@ -40,9 +40,7 @@ CREATE TABLE `almacen` (
 --
 
 INSERT INTO `almacen` (`id_almacen`, `id_sucursal`, `nombre_almacen`, `tipo_almacen`, `direccion`, `estadoA`) VALUES
-(1, 1, 'Primario', 'primordial', 'Calle San Camilo Las Americas', 1),
-(2, 1, 'Margot H.', 'Secundario', 'Depositos Oscuros', 1),
-(3, 1, 'Fidel C.', 'No Frecuente', 'Chifas Saga', 1);
+(1, 1, 'Almacen A', 'Primario', 'Ceja El alto Calle dos Nro 7768', 1);
 
 -- --------------------------------------------------------
 
@@ -61,7 +59,7 @@ CREATE TABLE `caja` (
 --
 
 INSERT INTO `caja` (`id`, `id_sucursal`, `monto`) VALUES
-(1, 1, 26854);
+(1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -86,10 +84,11 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`id`, `nombre_cliente`, `nit`, `direccion`, `tipo_cliente`, `telefono`, `correo`, `pass`, `publico`) VALUES
-(1, 'rkt', 100123213, NULL, 'minorista', 76543210, 'unx7777@gmail.com', '202cb962ac59075b964b07152d234b70', b'1'),
-(2, 'Ricardo Acarapi', 87342378, 'no se', 'Minorista', 76543210, 'ricardoacarapi@gmail.com', '', b'0'),
-(3, 'herick', 23456, NULL, 'minorista', 45678, 'echgutierrez@gmail.com', '202cb962ac59075b964b07152d234b70', b'1'),
-(4, 'jennifer llamoca', 14291253, NULL, 'minorista', 2631400, 'jenniferale.17@gmail.com', '202cb962ac59075b964b07152d234b70', b'1');
+(1, 'Juanito Perez', 84843281, NULL, 'minorista', 76576543, 'jperez@gmail.com', '202cb962ac59075b964b07152d234b70', b'1'),
+(2, 'Yoseline Aliaga Mendoza', 2776122, NULL, 'minorista', 6756354, 'yoselinali@gmail.com', '202cb962ac59075b964b07152d234b70', b'1'),
+(3, 'Alberto Quispe Tapia', 92929775, NULL, 'minorista', 60643210, 'albertoqtapia@gmail.com', '202cb962ac59075b964b07152d234b70', b'1'),
+(4, 'RICHARD QUISPE MAMANI', 7770001, '------------------', 'GENERAL', 7799494, 'ric@gmail.com', '', b'0'),
+(5, 'edwin', 2344, 'Z/ Rio seco C/ San lorenzo Nro 555', 'general', 0, '----------------', '', b'0');
 
 -- --------------------------------------------------------
 
@@ -112,9 +111,11 @@ CREATE TABLE `contrato` (
 --
 
 INSERT INTO `contrato` (`id`, `id_personal`, `id_tipo_contrato`, `fecha_contrato`, `estado`, `fecha_fin_contrato`, `estadoContrato`) VALUES
-(1, 14, 1, '2017-12-01', b'1', '0000-00-00', b'1'),
-(2, 123, 1, '2017-12-01', b'1', '0000-00-00', b'1'),
-(3, 2222, 1, '2017-12-07', b'1', '0000-00-00', b'1');
+(1, 7017691, 2, '2017-12-12', b'1', '0000-00-00', b'1'),
+(2, 321, 1, '2017-12-12', b'1', '0000-00-00', b'1'),
+(3, 123, 2, '2017-12-19', b'1', '0000-00-00', b'1'),
+(4, 2222, 1, '2017-12-12', b'1', '0000-00-00', b'1'),
+(5, 7017691, 1, '2017-12-19', b'1', '0000-00-00', b'0');
 
 -- --------------------------------------------------------
 
@@ -126,7 +127,10 @@ CREATE TABLE `detalle_pedido` (
   `id` int(11) NOT NULL,
   `id_pedido` int(11) DEFAULT NULL,
   `id_producto` int(11) NOT NULL,
+  `idPrecioTipoU` int(11) NOT NULL,
   `cantidad` double DEFAULT NULL,
+  `cantidadTU` double NOT NULL,
+  `precioTU` double NOT NULL,
   `total` double DEFAULT NULL,
   `estado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -135,15 +139,13 @@ CREATE TABLE `detalle_pedido` (
 -- Volcado de datos para la tabla `detalle_pedido`
 --
 
-INSERT INTO `detalle_pedido` (`id`, `id_pedido`, `id_producto`, `cantidad`, `total`, `estado`) VALUES
-(1, 1, 1, 100, 1200, 0),
-(2, 2, 1, 150, 1800, 0),
-(3, 3, 3, 500, 1000, 0),
-(4, 3, 3, 100, 200, 0),
-(5, 4, 5, 100, 1500, 0),
-(6, 5, 5, 100, 1500, 0),
-(7, 5, 4, 100, 280, 0),
-(8, 6, 8, 100, 1800, 0);
+INSERT INTO `detalle_pedido` (`id`, `id_pedido`, `id_producto`, `idPrecioTipoU`, `cantidad`, `cantidadTU`, `precioTU`, `total`, `estado`) VALUES
+(1, 1, 1, 1, 5000, 100, 8, 800, 0),
+(2, 1, 3, 5, 10000, 100, 12, 1200, 0),
+(3, 2, 2, 2, 1000, 10, 3.5, 35, 0),
+(4, 3, 2, 2, 1000, 10, 3.5, 35, 0),
+(5, 4, 5, 8, 100, 100, 4, 400, 0),
+(6, 4, 4, 7, 200, 200, 1, 200, 0);
 
 -- --------------------------------------------------------
 
@@ -155,7 +157,10 @@ CREATE TABLE `detalle_pedido_cli` (
   `id` int(11) NOT NULL,
   `nro_pedido` int(11) DEFAULT NULL,
   `id_producto` int(11) DEFAULT NULL,
+  `idPrecioTipoU` int(11) NOT NULL,
   `cantidad` double DEFAULT NULL,
+  `cantidadTU` double NOT NULL,
+  `precioTU` double NOT NULL,
   `total` double DEFAULT NULL,
   `estado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -164,16 +169,31 @@ CREATE TABLE `detalle_pedido_cli` (
 -- Volcado de datos para la tabla `detalle_pedido_cli`
 --
 
-INSERT INTO `detalle_pedido_cli` (`id`, `nro_pedido`, `id_producto`, `cantidad`, `total`, `estado`) VALUES
-(1, 1, 1, 2, 24, 1),
-(2, 2, 1, 20, 240, 1),
-(3, 3, 1, 12, 144, 1),
-(4, 3, 1, 55, 660, 1),
-(5, 4, 1, 54, 648, 1),
-(6, 4, 1, 10, 120, 1),
-(7, 5, 1, 30, 360, 1),
-(8, 5, 1, 10, 120, 1),
-(9, 6, 1, 12, 144, 1);
+INSERT INTO `detalle_pedido_cli` (`id`, `nro_pedido`, `id_producto`, `idPrecioTipoU`, `cantidad`, `cantidadTU`, `precioTU`, `total`, `estado`) VALUES
+(1, 1, 2, 0, NULL, 0, 0, NULL, 1),
+(2, 1, 1, 0, NULL, 0, 0, NULL, 1),
+(3, 1, 3, 0, NULL, 0, 0, NULL, 1),
+(4, 2, 2, 3, 48, 4, 60, NULL, 1),
+(5, 2, 1, 1, 4, 4, 9, NULL, 1),
+(6, 2, 3, 5, 5, 5, 8, NULL, 1),
+(7, 2, 2, 0, NULL, 0, 0, NULL, 1),
+(8, 2, 1, 0, NULL, 0, 0, NULL, 1),
+(9, 2, 3, 0, NULL, 0, 0, NULL, 1),
+(10, 3, 3, 5, 3, 3, 8, 24, 1),
+(11, 3, 5, 8, 2, 2, 5, 10, 1),
+(12, 3, 4, 7, 3, 3, 1, 3, 1),
+(13, 4, 3, 5, 3, 3, 8, NULL, 1),
+(14, 4, 1, 1, 5, 5, 9, NULL, 1),
+(15, 4, 4, 7, 12, 12, 1, NULL, 1),
+(16, 4, 3, 0, NULL, 0, 0, NULL, 1),
+(17, 4, 1, 0, NULL, 0, 0, NULL, 1),
+(18, 4, 4, 0, NULL, 0, 0, NULL, 1),
+(19, 5, 4, 6, 200, 2, 100, 200, 1),
+(20, 5, 1, 1, 4, 4, 9, 36, 1),
+(21, 5, 3, 5, 6, 6, 8, 48, 1),
+(22, 5, 4, 0, NULL, 0, 0, 200, 1),
+(23, 5, 1, 0, NULL, 0, 0, 36, 1),
+(24, 5, 3, 0, NULL, 0, 0, 48, 1);
 
 -- --------------------------------------------------------
 
@@ -191,15 +211,6 @@ CREATE TABLE `historial_caja_egreso` (
   `detalle` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `historial_caja_egreso`
---
-
-INSERT INTO `historial_caja_egreso` (`id`, `id_caja`, `id_personal`, `monto`, `fecha`, `hora`, `detalle`) VALUES
-(1, 1, 14, 1200, '2017-12-01', '17:29:11', 'Pago contrato'),
-(2, 1, 14, 500, '2017-12-01', '17:32:32', 'Pago contrato'),
-(3, 1, 14, 100, '2017-12-01', '17:36:26', 'Pago contrato');
-
 -- --------------------------------------------------------
 
 --
@@ -215,17 +226,6 @@ CREATE TABLE `historial_caja_ingreso` (
   `hora` varchar(10) DEFAULT NULL,
   `detalle` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `historial_caja_ingreso`
---
-
-INSERT INTO `historial_caja_ingreso` (`id`, `id_caja`, `id_personal`, `monto`, `fecha`, `hora`, `detalle`) VALUES
-(1, 1, 14, 150, '2017-12-01', '17:44:16', 'Ingreso a caja'),
-(2, 1, 14, 3000, '2017-12-01', '17:44:27', 'Ingreso a caja'),
-(3, 1, 123, 240, '2017-12-01', '18:14:40', 'Ingreso a caja'),
-(4, 1, 4444, 90, '2017-12-01', '18:21:02', 'Ingreso a caja por Venta'),
-(5, 1, 4444, 24, '2017-12-01', '18:21:41', 'Ingreso a caja por Venta');
 
 -- --------------------------------------------------------
 
@@ -247,15 +247,9 @@ CREATE TABLE `historial_egreso_producto` (
 --
 
 INSERT INTO `historial_egreso_producto` (`id`, `id_producto`, `cantidad`, `fecha_egreso`, `hora_egreso`, `id_personal`) VALUES
-(1, 1, 2, '2017-12-01', '18:05:40', 123),
-(2, 1, 20, '2017-12-01', '18:14:40', 123),
-(3, 1, 54, '2017-12-07', '15:50:21', 123),
-(4, 1, 10, '2017-12-07', '15:50:22', 123),
-(5, 1, 30, '2017-12-07', '16:49:54', 123),
-(6, 1, 10, '2017-12-07', '16:49:54', 123),
-(7, 1, 12, '2017-12-07', '17:02:25', 123),
-(8, 1, 12, '2017-12-07', '17:03:31', 123),
-(9, 1, 55, '2017-12-07', '17:03:32', 123);
+(1, 3, 3, '2017-12-12', '16:58:12', 321),
+(2, 5, 2, '2017-12-12', '16:58:12', 321),
+(3, 4, 3, '2017-12-12', '16:58:13', 321);
 
 -- --------------------------------------------------------
 
@@ -277,14 +271,12 @@ CREATE TABLE `historial_ingreso_producto` (
 --
 
 INSERT INTO `historial_ingreso_producto` (`id`, `id_producto`, `cantidad`, `fecha_ingreso`, `hora_ingreso`, `id_personal`) VALUES
-(1, 1, 100, '2017-12-01', '18:02:45', 321),
-(2, 1, 150, '2017-12-07', '15:38:16', 321),
-(3, 3, 500, '2017-12-07', '17:23:16', 321),
-(4, 3, 100, '2017-12-07', '17:23:16', 321),
-(5, 5, 100, '2017-12-07', '17:26:11', 321),
-(6, 5, 100, '2017-12-07', '17:27:10', 321),
-(7, 4, 100, '2017-12-07', '17:27:10', 321),
-(8, 8, 100, '2017-12-07', '19:20:16', 321);
+(1, 1, 5000, '2017-12-12', '16:07:56', 7017691),
+(2, 3, 10000, '2017-12-12', '16:07:56', 7017691),
+(3, 2, 1000, '2017-12-12', '16:13:35', 7017691),
+(4, 2, 1000, '2017-12-12', '16:13:56', 7017691),
+(5, 5, 100, '2017-12-12', '16:51:26', 7017691),
+(6, 4, 200, '2017-12-12', '16:51:26', 7017691);
 
 -- --------------------------------------------------------
 
@@ -322,12 +314,7 @@ CREATE TABLE `nota_venta` (
 --
 
 INSERT INTO `nota_venta` (`id`, `id_personal`, `nro_pedido`, `fecha_venta`, `monto_total`, `tipo_venta`, `fecha_limite`, `montoPendiente`) VALUES
-(1, 123, 1, '2017-12-01', 24, 'Al contado', '0000-00-00', 0),
-(2, 123, 2, '2017-12-01', 240, 'Al contado', '0000-00-00', 0),
-(3, 123, 4, '2017-12-07', 768, 'Al contado', '0000-00-00', 768),
-(4, 123, 5, '2017-12-07', 480, 'Al contado', '0000-00-00', 480),
-(5, 123, 6, '2017-12-07', 144, 'Al contado', '0000-00-00', 144),
-(6, 123, 3, '2017-12-07', 804, 'Al contado', '0000-00-00', 804);
+(1, 321, 3, '2017-12-12', 37, 'Al contado', '0000-00-00', 37);
 
 -- --------------------------------------------------------
 
@@ -343,15 +330,6 @@ CREATE TABLE `pago_contrato` (
   `id_caja` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Volcado de datos para la tabla `pago_contrato`
---
-
-INSERT INTO `pago_contrato` (`id`, `id_contrato`, `fecha_pago`, `pago`, `id_caja`) VALUES
-(1, 1, '2017-12-01', 1200, 1),
-(2, 1, '2017-12-01', 500, 1),
-(3, 1, '2017-12-01', 100, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -366,15 +344,6 @@ CREATE TABLE `pago_nota_venta` (
   `monto` double DEFAULT NULL,
   `monto_pendiente` double DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Volcado de datos para la tabla `pago_nota_venta`
---
-
-INSERT INTO `pago_nota_venta` (`id`, `id_nota_venta`, `fecha_pago`, `id_personal`, `monto`, `monto_pendiente`) VALUES
-(1, 2, '2017-12-01', 4444, 150, 90),
-(2, 2, '2017-12-01', 4444, 90, 0),
-(3, 1, '2017-12-01', 4444, 24, 0);
 
 -- --------------------------------------------------------
 
@@ -411,12 +380,11 @@ CREATE TABLE `pedido_cli` (
 --
 
 INSERT INTO `pedido_cli` (`nro_pedido`, `id_sucursal`, `id_cliente`, `fecha_pedido`, `monto`, `estado`) VALUES
-(1, 1, 2, '2017-12-01', 24, 1),
-(2, 1, 1, '2017-12-01', 240, 1),
-(3, 1, 3, '2017-12-01', 804, 1),
-(4, 1, 3, '2017-12-07', 768, 1),
-(5, 1, 3, '2017-12-07', 480, 1),
-(6, 1, 3, '2017-12-07', 144, 1);
+(1, 1, 3, '2017-12-12', 316, 0),
+(2, 1, 3, '2017-12-12', 316, 0),
+(3, 1, NULL, '2017-12-12', 37, 1),
+(4, 1, 3, '2017-12-12', 81, 0),
+(5, 1, 3, '2017-12-12', 284, 0);
 
 -- --------------------------------------------------------
 
@@ -430,6 +398,7 @@ CREATE TABLE `pedido_prov` (
   `fecha_pedido` date DEFAULT NULL,
   `nro_pedido` int(11) DEFAULT NULL,
   `monto_total` double DEFAULT NULL,
+  `monto_pendiente` double NOT NULL,
   `estado` bit(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -437,13 +406,11 @@ CREATE TABLE `pedido_prov` (
 -- Volcado de datos para la tabla `pedido_prov`
 --
 
-INSERT INTO `pedido_prov` (`id`, `id_proveedor`, `fecha_pedido`, `nro_pedido`, `monto_total`, `estado`) VALUES
-(1, 1, '2017-12-01', 1, 1200, b'0'),
-(2, 2, '2017-12-07', 2, 1800, b'0'),
-(3, 3, '2017-12-07', 3, 1200, b'0'),
-(4, 3, '2017-12-07', 4, 1500, b'0'),
-(5, 3, '2017-12-07', 5, 1780, b'0'),
-(6, NULL, '2017-12-07', 6, 1800, b'0');
+INSERT INTO `pedido_prov` (`id`, `id_proveedor`, `fecha_pedido`, `nro_pedido`, `monto_total`, `monto_pendiente`, `estado`) VALUES
+(1, 1, '2017-12-12', 1, 2000, 2000, b'0'),
+(2, 2, '2017-12-12', 2, 35, 35, b'0'),
+(3, 2, '2017-12-12', 3, 35, 35, b'0'),
+(4, 2, '2017-12-12', 4, 600, 600, b'0');
 
 -- --------------------------------------------------------
 
@@ -470,12 +437,40 @@ CREATE TABLE `personal` (
 --
 
 INSERT INTO `personal` (`ci`, `nombres`, `apellidos`, `fecha_nacimiento`, `celular`, `direccion`, `cargo`, `usuario`, `password`, `id_sucursal`, `estadoPer`) VALUES
-(14, 'Jhennyfer', 'Llamoca', '1990-08-27', 765438, 'no se', 'Super administrador', '14', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
-(123, 'no se ', 'no se', '2017-12-01', 76543210, 'no se', 'Vendedor', '123', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
-(321, 'no se', 'no se', '2017-12-01', 76543210, 'no se', 'Almacenero', '321', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
-(2222, 'Luis ', 'chambi guterrez', '1990-12-07', 74009595, 'El alto Cosmos 72 Nro 889', 'Vendedor', '2222', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
-(4444, 'cajero', 'cajero', '2017-12-01', 764723, 'no se', 'Cajero', '4444', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
-(14291253, 'alejandra', 'condori', '1990-11-07', 74085867, 'zopocachi Nro 505', 'Vendedor', 'patita', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1');
+(123, 'Herick', 'Mamani Mamani', '1990-12-31', 77788899, 'Villa dela Nro 898', 'Almacenero', '123', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
+(321, 'Juan', 'Choque Ticona', '1991-12-28', 76662626, 'Senkata Nro 797', 'Vendedor', '321', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
+(2222, 'Alejandra', 'Condori ', '1992-12-16', 7885672, 'El Alto camino laja Nro 4567', 'Cajero', '2222', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1'),
+(7017691, 'Edwin', 'Chambi Gutierrez', '1989-12-29', 74085867, 'rio se Extranca Nro 737', 'Super administrador', '7017691', '40bd001563085fc35165329ea1ff5c5ecbdbbeef', 1, b'1');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `precioTipoU`
+--
+
+CREATE TABLE `precioTipoU` (
+  `idPrecioTipoU` int(11) NOT NULL,
+  `cantidadTU` double NOT NULL,
+  `precioU` double DEFAULT NULL,
+  `ptunitario` double NOT NULL,
+  `id_producto` int(11) DEFAULT NULL,
+  `id_tipo_unitario` int(11) DEFAULT NULL,
+  `estadoPTU` bit(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `precioTipoU`
+--
+
+INSERT INTO `precioTipoU` (`idPrecioTipoU`, `cantidadTU`, `precioU`, `ptunitario`, `id_producto`, `id_tipo_unitario`, `estadoPTU`) VALUES
+(1, 1, 9, 9, 1, 1, b'1'),
+(2, 1, 5, 5, 2, 1, b'1'),
+(3, 12, 5, 60, 2, 2, b'1'),
+(4, 10, 140, 1400, 3, 3, b'0'),
+(5, 1, 8, 8, 3, 1, b'1'),
+(6, 100, 1, 100, 4, 4, b'1'),
+(7, 1, 1, 1, 4, 1, b'1'),
+(8, 1, 5, 5, 5, 1, b'1');
 
 -- --------------------------------------------------------
 
@@ -491,7 +486,6 @@ CREATE TABLE `producto` (
   `marca` varchar(300) DEFAULT NULL,
   `stock` double DEFAULT NULL,
   `id_tipo_producto` int(11) DEFAULT NULL,
-  `id_tipo_unitario` int(11) DEFAULT NULL,
   `id_almacen` int(11) DEFAULT NULL,
   `estadoPro` bit(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -500,18 +494,12 @@ CREATE TABLE `producto` (
 -- Volcado de datos para la tabla `producto`
 --
 
-INSERT INTO `producto` (`id`, `nombre_pro`, `descripcion`, `precio`, `marca`, `stock`, `id_tipo_producto`, `id_tipo_unitario`, `id_almacen`, `estadoPro`) VALUES
-(1, 'Empastados', 'Cuadernos empastados tamaño carta', 12, 'TOP', 45, 1, 1, 1, b'1'),
-(2, 'cuadernos X100 NORMA', 'cuadernos X100 NORMA', 9, 'NORMA', 0, 1, 2, 1, b'1'),
-(3, 'COLORES JUMBO-FC', 'COLORES JUMBO-FC', 2, 'FABERCASTELL', 600, 3, 2, 1, b'1'),
-(4, 'TAJADOR MEDIAÑO', 'TAJADOR MEDIANO-ARTESCO', 2.8, 'ARTESCO', 100, 5, 2, 1, b'1'),
-(5, 'ENGRANPADORA-ARTESCO', 'ENGRAMPADORA-GRAND-ARTESCO', 15, 'ARTESCO', 200, 6, 5, 1, b'1'),
-(6, 'pintura para dedo', 'pintura para dedo X6', 15, 'Apu', 0, 1, 1, 1, b'1'),
-(7, 'PERFORADOR ', 'PERFORADORA-PEQU-FC', 5, 'FABERCASTELL', 0, 6, 6, 1, b'1'),
-(8, 'colores ', 'colores acuarelables X12 ', 18, 'Stanfords', 100, 3, 1, 1, b'1'),
-(9, 'colores X6', 'COLORES X6 semi grasoso', 12, 'faber castell', 0, 3, 6, 1, b'1'),
-(10, 'colores X24', 'colores X24 acuarelables ', 24, 'faber castell', 0, 3, 6, 1, b'1'),
-(11, 'colores X24', 'colores X24 acuarelables ', 24, 'faber castell', 0, 3, 6, 1, b'1');
+INSERT INTO `producto` (`id`, `nombre_pro`, `descripcion`, `precio`, `marca`, `stock`, `id_tipo_producto`, `id_almacen`, `estadoPro`) VALUES
+(1, 'CUAD A4 JUNIOR BOOK', NULL, NULL, 'STAN', 5000, 1, 1, b'1'),
+(2, 'ESCUADRA X 20CM', NULL, NULL, 'FC', 2000, 1, 1, b'1'),
+(3, 'PLUMO ESTUCHE JUMBO L47 X12', NULL, NULL, 'FC', 9997, 1, 1, b'1'),
+(4, 'CARTUL PLASTIFICADA COLOR', NULL, NULL, 'MAPED', 197, 1, 1, b'1'),
+(5, 'TIJERAS DE FORMAS SIMPLES', NULL, NULL, 'MAPED', 98, 2, 1, b'1');
 
 -- --------------------------------------------------------
 
@@ -535,10 +523,8 @@ CREATE TABLE `proveedor` (
 --
 
 INSERT INTO `proveedor` (`id`, `nombre_prov`, `direccion_prov`, `telefono_prov`, `nit`, `nombre_encargado`, `correo`, `estado`) VALUES
-(1, 'Top', 'no me acuerdo', 73242831, 9300012, 'Juanito Perez ', 'top_lider@gmail.com', b'1'),
-(2, 'otro', 'no se ', 76543210, 100012, 'Juanito Perez', 'ntc@gmail.com', b'1'),
-(3, 'LAYCONSA S.A.', 'BOLIVIA - COCHABAMBA- AV. EDWIN-ESQUINA.RICON', 2222929, 2293948, 'ALAJANDRA', 'ALEJANDRA@GMAIL.COM', b'1'),
-(4, 'TAYLOY', 'LA PAZ ', 22232, 234343, 'jorge macheco', 'jorge-@gmail.com', b'1');
+(1, 'TOP ', 'SANTA CRUZ TERCER ANILLO ', 2000289, 1288489, 'Ramiro Quenta', 'ram@gmail.com', b'1'),
+(2, 'PROVEEDOR GENERAL', '-----------', 79993779, 0, 'RAMSEE QUISPE QUISPE', 'ram@gmail.com', b'1');
 
 -- --------------------------------------------------------
 
@@ -561,7 +547,7 @@ CREATE TABLE `sucursal` (
 --
 
 INSERT INTO `sucursal` (`id`, `nombre`, `nit`, `telefono`, `direccion`, `emai`, `estado`) VALUES
-(1, 'San camilo', 14, 7676567, 'no se', 'ns@gmail.com', b'1');
+(1, 'Lider', 1000012, 76543219, 'Ceja El Alto calle dos', 'liderlibre@gmail.com', b'1');
 
 -- --------------------------------------------------------
 
@@ -586,7 +572,8 @@ CREATE TABLE `tipo_contrato` (
 --
 
 INSERT INTO `tipo_contrato` (`id`, `nombre_tipo_contrato`, `experiencia_trabajo`, `turno_trabajo`, `dias_trabajo`, `horario_trabajo`, `tipo_sueldo`, `sueldo`, `estadoTipoC`) VALUES
-(1, 'Navideño', 'Medio', 'Tarde', 'Lunes,Martes,Miercoles,Jueves,Viernes', '14:00 a 19:00', 'Por mes', 1300, b'1');
+(1, 'Escolar', 'Medio', 'Todo el dia', 'Lunes,Martes,Miercoles,Jueves,Viernes,Sabado', '7:00 a 19:00', 'Por mes', 2000, b'1'),
+(2, 'Todo el año', 'Medio', 'Todo el dia', 'Lunes,Martes,Miercoles,Jueves,Viernes,Sabado', '7:00 a 19:00', 'Por mes', 3000, b'1');
 
 -- --------------------------------------------------------
 
@@ -605,12 +592,8 @@ CREATE TABLE `tipo_producto` (
 --
 
 INSERT INTO `tipo_producto` (`id`, `nombre_tipo_p`, `estadoTP`) VALUES
-(1, 'Cuadernos', b'1'),
-(2, 'acrilex', b'1'),
-(3, 'colores', b'1'),
-(4, 'PAPEL', b'1'),
-(5, 'TAJADOR', b'1'),
-(6, 'OFICINA', b'1');
+(1, 'ESCOLAR', b'1'),
+(2, 'OFICINA ', b'1');
 
 -- --------------------------------------------------------
 
@@ -629,13 +612,11 @@ CREATE TABLE `tipo_unitario` (
 --
 
 INSERT INTO `tipo_unitario` (`id`, `nombre_tipo_u`, `estadoTU`) VALUES
-(1, 'Caja', b'1'),
-(2, 'Millar', b'1'),
-(3, 'DOCENA', b'1'),
-(4, 'Metro', b'1'),
-(5, 'Ciento', b'1'),
-(6, 'UND', b'1'),
-(7, 'UND', b'1');
+(1, 'UND', b'1'),
+(2, 'DOCENA', b'1'),
+(3, 'PAQ', b'1'),
+(4, 'CAJA', b'1'),
+(5, 'ROLLO', b'1');
 
 --
 -- Índices para tablas volcadas
@@ -774,12 +755,19 @@ ALTER TABLE `personal`
   ADD KEY `id_sucursal` (`id_sucursal`);
 
 --
+-- Indices de la tabla `precioTipoU`
+--
+ALTER TABLE `precioTipoU`
+  ADD PRIMARY KEY (`idPrecioTipoU`),
+  ADD KEY `id_producto` (`id_producto`),
+  ADD KEY `id_tipo_unitario` (`id_tipo_unitario`);
+
+--
 -- Indices de la tabla `producto`
 --
 ALTER TABLE `producto`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_tipo_producto` (`id_tipo_producto`),
-  ADD KEY `id_tipo_unitario` (`id_tipo_unitario`),
   ADD KEY `id_almacen` (`id_almacen`);
 
 --
@@ -820,7 +808,7 @@ ALTER TABLE `tipo_unitario`
 -- AUTO_INCREMENT de la tabla `almacen`
 --
 ALTER TABLE `almacen`
-  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_almacen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `caja`
 --
@@ -830,42 +818,42 @@ ALTER TABLE `caja`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `contrato`
 --
 ALTER TABLE `contrato`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `detalle_pedido_cli`
 --
 ALTER TABLE `detalle_pedido_cli`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT de la tabla `historial_caja_egreso`
 --
 ALTER TABLE `historial_caja_egreso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `historial_caja_ingreso`
 --
 ALTER TABLE `historial_caja_ingreso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `historial_egreso_producto`
 --
 ALTER TABLE `historial_egreso_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT de la tabla `historial_ingreso_producto`
 --
 ALTER TABLE `historial_ingreso_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT de la tabla `nota_ingreso`
 --
@@ -875,17 +863,17 @@ ALTER TABLE `nota_ingreso`
 -- AUTO_INCREMENT de la tabla `nota_venta`
 --
 ALTER TABLE `nota_venta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT de la tabla `pago_contrato`
 --
 ALTER TABLE `pago_contrato`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `pago_nota_venta`
 --
 ALTER TABLE `pago_nota_venta`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `pago_pedido`
 --
@@ -895,22 +883,27 @@ ALTER TABLE `pago_pedido`
 -- AUTO_INCREMENT de la tabla `pedido_cli`
 --
 ALTER TABLE `pedido_cli`
-  MODIFY `nro_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `nro_pedido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `pedido_prov`
 --
 ALTER TABLE `pedido_prov`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+--
+-- AUTO_INCREMENT de la tabla `precioTipoU`
+--
+ALTER TABLE `precioTipoU`
+  MODIFY `idPrecioTipoU` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT de la tabla `producto`
 --
 ALTER TABLE `producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT de la tabla `proveedor`
 --
 ALTER TABLE `proveedor`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `sucursal`
 --
@@ -920,17 +913,17 @@ ALTER TABLE `sucursal`
 -- AUTO_INCREMENT de la tabla `tipo_contrato`
 --
 ALTER TABLE `tipo_contrato`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `tipo_producto`
 --
 ALTER TABLE `tipo_producto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT de la tabla `tipo_unitario`
 --
 ALTER TABLE `tipo_unitario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- Restricciones para tablas volcadas
 --
@@ -1045,11 +1038,17 @@ ALTER TABLE `personal`
   ADD CONSTRAINT `personal_ibfk_1` FOREIGN KEY (`id_sucursal`) REFERENCES `sucursal` (`id`);
 
 --
+-- Filtros para la tabla `precioTipoU`
+--
+ALTER TABLE `precioTipoU`
+  ADD CONSTRAINT `precioTipoU_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `producto` (`id`),
+  ADD CONSTRAINT `precioTipoU_ibfk_2` FOREIGN KEY (`id_tipo_unitario`) REFERENCES `tipo_unitario` (`id`);
+
+--
 -- Filtros para la tabla `producto`
 --
 ALTER TABLE `producto`
   ADD CONSTRAINT `producto_ibfk_1` FOREIGN KEY (`id_tipo_producto`) REFERENCES `tipo_producto` (`id`),
-  ADD CONSTRAINT `producto_ibfk_2` FOREIGN KEY (`id_tipo_unitario`) REFERENCES `tipo_unitario` (`id`),
   ADD CONSTRAINT `producto_ibfk_3` FOREIGN KEY (`id_almacen`) REFERENCES `almacen` (`id_almacen`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -103,17 +103,20 @@ class Model_nota_venta extends CI_Model {
 	}
 	public function reporteVentas($id)
 	{
-		$r = $this->db->query("SELECT n.nro_pedido,n.fecha_venta, n.monto_total , n.tipo_venta,
+		$r = $this->db->query("SELECT
+													n.nro_pedido,n.fecha_venta,n.monto_total,n.tipo_venta,
 													c.nombre_cliente,c.nit,c.tipo_cliente,
-													pro.nombre_pro, pro.descripcion, pro.marca , d.cantidad, d.total,
-													per.nombres,per.apellidos
+													per.nombres,per.apellidos,
+													pro.nombre_pro,pro.marca,tu.nombre_tipo_u,d.cantidadTU,d.precioTU,d.total
 													FROM nota_venta n
-													INNER JOIN pedido_cli p ON n.nro_pedido = p.nro_pedido
-													INNER JOIN detalle_pedido_cli d on d.nro_pedido = p.nro_pedido
+													INNER JOIN pedido_cli p ON p.nro_pedido = n.nro_pedido
 													INNER JOIN cliente c ON c.id = p.id_cliente
-													INNER JOIN producto pro on pro.id = d.id_producto
+													INNER JOIN detalle_pedido_cli d ON d.nro_pedido = p.nro_pedido
+													INNER JOIN precioTipoU prt ON prt.idPrecioTipoU = d.idPrecioTipoU
+													INNER JOIN producto pro ON pro.id = d.id_producto
 													INNER JOIN personal per on per.ci = n.id_personal
-													where p.nro_pedido=$id");
+													INNER JOIN tipo_unitario tu ON tu.id = prt.id_tipo_unitario
+													WHERE n.nro_pedido = $id");
 		return $r->result();
 	}
 	public function buscarCliente($idCliente)
@@ -123,6 +126,37 @@ class Model_nota_venta extends CI_Model {
 											INNER JOIN pedido_cli pc on pc.nro_pedido = n.nro_pedido
 											INNER JOIN cliente c on c.id = pc.id_cliente
 											WHERE c.id = $idCliente
+											");
+		return $r->result();
+	}
+	public function buscarFechas($f1,$f2)
+	{
+		$r = $this->db->query("SELECT c.nombre_cliente,c.nit,n.monto_total,n.fecha_venta,n.nro_pedido,n.montoPendiente
+											FROM nota_venta n
+											INNER JOIN pedido_cli pc on pc.nro_pedido = n.nro_pedido
+											INNER JOIN cliente c on c.id = pc.id_cliente
+											WHERE n.fecha_venta BETWEEN '$f1' AND '$f2'
+											");
+		return $r->result();
+	}
+	public function buscarNotasV($nota)
+	{
+		$r = $this->db->query("SELECT c.nombre_cliente,c.nit,n.monto_total,n.fecha_venta,n.nro_pedido,n.montoPendiente
+											FROM nota_venta n
+											INNER JOIN pedido_cli pc on pc.nro_pedido = n.nro_pedido
+											INNER JOIN cliente c on c.id = pc.id_cliente
+											WHERE n.nro_pedido = $nota
+											");
+		return $r->result();
+	}
+	public function buscarClientesFecha($id,$f1,$f2)
+	{
+		$r = $this->db->query("SELECT c.nombre_cliente,c.nit,n.monto_total,n.fecha_venta,n.nro_pedido,n.montoPendiente
+											FROM nota_venta n
+											INNER JOIN pedido_cli pc on pc.nro_pedido = n.nro_pedido
+											INNER JOIN cliente c on c.id = pc.id_cliente
+											WHERE  n.fecha_venta BETWEEN '$f1' AND '$f2'
+											and c.id = $id
 											");
 		return $r->result();
 	}

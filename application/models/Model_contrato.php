@@ -25,6 +25,7 @@ class Model_contrato extends CI_Model {
 	{
 		$this->db->set($data);
 		$this->db->insert('contrato');
+		return $this->db->insert_id();
 	}
 	public function modificar_contrato($id,$data)
 	{
@@ -57,5 +58,17 @@ class Model_contrato extends CI_Model {
 		$r = $this->db->query("select * from pago_contrato
 													where id_contrato = $id");
 		return $r->result();
+	}
+	public function reporteContrato($id)
+	{
+		$r = $this->db->query("select c.fecha_contrato, c.fecha_fin_contrato,
+													p.nombres,p.apellidos,p.ci,
+													tc.nombre_tipo_contrato,tc.experiencia_trabajo,tc.turno_trabajo,tc.dias_trabajo,tc.horario_trabajo,tc.tipo_sueldo,tc.sueldo
+													from contrato c
+													inner join personal p on p.ci = c.id_personal
+													inner join tipo_contrato tc on tc.id = c.id_tipo_contrato
+													inner join sucursal s on s.id = p.id_sucursal
+													where c.id = $id");
+	return $r->result();
 	}
 }

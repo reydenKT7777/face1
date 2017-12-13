@@ -84,16 +84,16 @@ var base_url = $('#base').val();
       success:function (data) {
         $('.modal_verPedido').modal("show");
         var html = "";
-        html += "<h1>"+data.pedido[0]["nombre"]+"</h1>";
+        html += "<h1>Sucursal"+data.pedido[0]["nombre"]+"</h1>";
         html += "<h3>Fecha: "+data.pedido[0]["fecha_pedido"]+"</h3>";
         html += '<table class="table">'+
           '<thead>'+
             '<tr>'+
               '<th>#</th>'+
               '<th>Producto</th>'+
-              '<th>Descripcion</th>'+
-              '<th>P/U</th>'+
+              '<th>T/U</th>'+
               '<th>Cantidad</th>'+
+              '<th>Precio/U</th>'+
               '<th>Total</th>'+
             '</tr>'+
           '</thead>'+
@@ -102,9 +102,9 @@ var base_url = $('#base').val();
               html += '<tr>'+
                 '<td>'+(i+1)+'</td>'+
                 '<td>'+data.pedido[i]["nombre_pro"]+" "+data.pedido[i]["marca"]+'</td>'+
-                '<td>'+data.pedido[i]["descripcion"]+'</td>'+
-                '<td>'+data.pedido[i]["precio"]+'</td>'+
-                '<td>'+data.pedido[i]["cantidad"]+'</td>'+
+                '<td>'+data.pedido[i]["nombre_tipo_u"]+'</td>'+
+                '<td>'+data.pedido[i]["cantidadTU"]+'</td>'+
+                '<td>'+data.pedido[i]["precioTU"]+'</td>'+
                 '<td>'+data.pedido[i]["total"]+'</td>'+
               '</tr>';
             }
@@ -123,15 +123,6 @@ var base_url = $('#base').val();
         $('.listaPedido').empty();
         $('.listaPedido').html(html);
       }
-    })
-    .done(function() {
-      console.log("success");
-    })
-    .fail(function() {
-      console.log("error");
-    })
-    .always(function() {
-      console.log("complete");
     });
 
   }

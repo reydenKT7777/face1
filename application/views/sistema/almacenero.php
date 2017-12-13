@@ -367,16 +367,16 @@ $('#productos').on('change', function() {
 			tipoUnitarioPR = data.ptu;
 			$('#pUnitario').val(data.producto[0]["precio"]);
 			var html = "<h4 style='color:#fff'>Stock de "+data.producto[0]["nombre_pro"]+" "+data.producto[0]["marca"]+" : "+data.producto[0]["stock"]+" Unidades <input type='hidden' value='"+data.producto[0]["stock"]+"' id='stockLimite'></h4>";
-			html += '<li>';
+			html += '<ul>';
 					for (var i = 0; i < data.ptu.length; i++) {
-						html += '<ul style="color:#fff">'+
+						html += '<li style="color:#fff">'+
 										'<div class="radio">'+
 		                  '<label>'+
 		                      '<input type="radio" name="tipoU" value="'+i+'" class="tunitario"> '+data.ptu[i]["nombre_tipo_u"]+
 		                  '</label>'+
-		              '</div></ul>';
+		              '</div></li>';
 					}
-			html += '</li>';
+			html += '</ul>';
 			$('.stock').html(html);
 			$('.tunitario').on('click', function() {
 				var index = $(this).val();
@@ -418,21 +418,29 @@ var agergarALista = function () {
 									'<input type="hidden" id="producto'+idPTU+'" name="producto[]" value="'+data.producto[0]["id"]+'">'+
 								"</tr>";
 				$('#contenidoVenta').append(html);
-				$('#cantidadP').val("");
+				//$('#cantidadP').val("");
 			}
 		});
 }
 var calcularLista = function (id) {
 	var cantidadTU = $('#cantidadTU'+id).val();
-	var precioTU = $('#precioTU'+id).val();
+	var stock = $('#stock'+id).val();
 	var ctipou = $('#ctipou'+id).val();
+	var precioTU = $('#precioTU'+id).val();
 	var total = (cantidadTU * 1) * (precioTU);
-	$('#totalTU'+id).val(total.toFixed(2));
-	var real = (ctipou*1)*(cantidadTU*1);
-	$('#cantidadReal'+id).val(real.toFixed(2));
+
+	/*if ((stock*1) >= ((cantidadTU*1)*(ctipou))) {*/
+		$('#totalTU'+id).val(total.toFixed(2));
+		var real = (ctipou*1)*(cantidadTU*1);
+		$('#cantidadReal'+id).val(real.toFixed(2));
+	/*}
+	else {
+		alert("No existe esa cantidad en Almacen!!");
+		$('#totalTU'+id).val(0);
+		$('#cantidadTU'+id).val(0);
+	//}*/
 	var t = 0;
 	$('input[name="totalTU[]"]').each(function() {
-
 		if ($(this).val() != "") {
 			t = t + ($(this).val()*1);
 		}

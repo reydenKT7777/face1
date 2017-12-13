@@ -88,7 +88,7 @@ var enviarPedido = function () {
     url: base_url+'index.php/controlador_pedido_cli/guardarPedido',
     type: 'POST',
     dataType: 'JSON',
-    data: {id_sucursal:idSucursal,idProducto:idProducto,cantidadP:cantidadP,totalP:totalP,totalT:totalT},
+    data: {id_sucursal:idSucursal,cantidadReal:cantidadReal,idProducto:idProducto,idPrecioTipoU:idPrecioTipoU,cantidadTU:cantidadTU,precioTU:precioTU,totalP:totalP,totalT:totalT},
     success:function (data) {
       if (data["respuesta"] == "correcto") {
         location.href = base_url+"index.php/admin/misPedidos";
@@ -109,25 +109,21 @@ var listarProductos = function (id) {
           '<tr>'+
             '<th>Producto</th>'+
             '<th>Marca</th>'+
-            '<th>Descripci&oacute;n</th>'+
-            '<th>Precio unitario</th>'+
-            '<th>Sucursal</th>'+
+            '<th>Sucursal</th>';
             <?php
             if ($this->session->nombres) {
               ?>
-              '<th>Agregar a la lista</th>'+
+              html += '<th>Agregar a la lista</th>';
               <?php
             }
             ?>
-          '</tr>'+
+          html += '</tr>'+
         '</thead>'+
         '<tbody>';
       for (var i = 0; i < data.length; i++) {
         html += "<tr>"+
                   "<td>"+data[i]["nombre_pro"]+"</td>"+
                   "<td>"+data[i]["marca"]+"</td>"+
-                  "<td>"+data[i]["descripcion"]+"</td>"+
-                  "<td>"+data[i]["precio"]+"</td>"+
                   "<td>"+data[i]["ns"]+"</td>"+
                   <?php
                   if ($this->session->nombres) {
@@ -184,9 +180,12 @@ var listarProductos = function (id) {
 var  idProducto = new Array();
 var  cantidadP = new Array();
 var  nombreP = new Array();
-var  descripcionP = new Array();
-var  precioP = new Array();
+var idPrecioTipoU = new Array();
+var cantidadReal = new Array();
+var cantidadTU = new Array();
+var precioTU = new Array();
 var totalP = new Array();
+var tipoUnitario = new Array();
 var totalT = 0;
 var	indice = 0;
 
@@ -198,43 +197,60 @@ var agregarLista = function (id) {
     dataType: 'json',
     data: {id: id},
     success:function (data) {
+      tipoUnitarioPR = data.ptu;
       var html = "";
       for (var i = 0; i < data.producto.length; i++) {
         html += '<div class="input-group">'+
                     '<input type="hidden" id="id_producto" value="'+data.producto[i]["id"]+'">'+
                     '<input type="hidden" id="nombrePro" value="'+data.producto[i]["nombre_pro"]+'">'+
-                    '<input type="hidden" id="descripcionPro" value="'+data.producto[i]["descripcion"]+'">'+
-                    '<input type="hidden" id="precioPro" value="'+data.producto[i]["precio"]+'">'+
-                    '<span class="input-group-addon">'+data.producto[i]["nombre_pro"]+' '+data.producto[i]["marca"]+' Precio: '+data.producto[i]["precio"]+'</span>'+
-                    '<input type="text" class="form-control" id="cantidad" placeholder="Cantidad requerida">'+
+                    '<input type="hidden" id="idPrecioTipoU" value="">'+
+                    '<input type="hidden" id="nombre_tipo_u" value="">'+
+                    '<input type="hidden" id="cantidadT" value="">'+
+                    '<input type="hidden" id="precioTU" value="">'+
+                    '<span class="input-group-addon">'+data.producto[i]["nombre_pro"]+' '+data.producto[i]["marca"]+'</span>'+
+                    '<input type="text" class="form-control" id="cantidadTU" placeholder="Cantidad requerida">'+
                   '</div><br>'+
-                  '<p>'+data.producto[i]["descripcion"]+'</p>';
+                  '<p>';
+                  html += '<ul>';
+            					for (var i = 0; i < data.ptu.length; i++) {
+            						html += '<li style="color:#fff">'+
+            										'<div class="radio">'+
+            		                  '<label>'+
+            		                      '<input type="radio" name="tipoU" value="'+i+'" class="tunitario"> '+data.ptu[i]["nombre_tipo_u"]+' '+data.ptu[i]["ptunitario"]+' Bs.'+
+            		                  '</label>'+
+            		              '</div></li>';
+            					}
+            			html += '</ul>';
+                  html += '</p>';
 
       }
       $('.formulario_Producto').empty();
       $('.formulario_Producto').html(html);
-      $('#cantidad').focus();
+      //$('#cantidad').focus();
+      $('.tunitario').on('click', function() {
+				var index = $(this).val();
+				$('#idPrecioTipoU').val(tipoUnitarioPR[index]["idPrecioTipoU"]);
+				$('#cantidadT').val(tipoUnitarioPR[index]["cantidadTU"]);
+				//$('#precioU').val(tipoUnitarioPR[index]["precioU"]);
+				$('#precioTU').val(tipoUnitarioPR[index]["ptunitario"]);
+				$('#nombre_tipo_u').val(tipoUnitarioPR[index]["nombre_tipo_u"]);
+				//alert("Identificador:"+id+" => Precio:"+precioU);
+			});
     }
-  })
-  .done(function() {
-    console.log("success");
-  })
-  .fail(function() {
-    console.log("error");
-  })
-  .always(function() {
-    console.log("complete");
   });
 
 }
 var agregarL = function () {
   $('.modal_agregarLista').modal("hide");
   idProducto[indice]=$('#id_producto').val();
-  cantidadP[indice] = $('#cantidad').val();
+  //cantidadP[indice] = $('#cantidad').val();
   nombreP[indice] = $('#nombrePro').val();
-  descripcionP[indice] = $('#descripcionPro').val();
-  precioP[indice] = $('#precioPro').val();
-  totalP[indice] = ($('#cantidad').val()*1) * ($('#precioPro').val()*1);
+  idPrecioTipoU[indice] = $('#idPrecioTipoU').val();
+  cantidadReal[indice] = ($('#cantidadT').val()*1)*($('#cantidadTU').val()*1);
+  tipoUnitario[indice] = $('#nombre_tipo_u').val();
+  cantidadTU[indice] =  $('#cantidadTU').val();
+  precioTU[indice] =  $('#precioTU').val();
+  totalP[indice] = ($('#cantidadTU').val()*1) * ($('#precioTU').val()*1);
   indice++;
   $('#notificacionL').html(indice);
 }
@@ -246,9 +262,9 @@ var mostrarLista = function () {
               '<tr>'+
                 '<th>#</th>'+
                 '<th>Producto</th>'+
-                '<th>Descripcion</th>'+
-                '<th>P/U</th>'+
+                '<th>T/U</th>'+
                 '<th>Cantidad</th>'+
+                '<th>Precio/U</th>'+
                 '<th>Total</th>'+
               '</tr>'+
             '</thead>'+
@@ -259,12 +275,12 @@ var mostrarLista = function () {
     html += "<tr>";
       html += "<td>"+(i+1)+"</td>";
       html += "<td>"+nombreP[i]+"</td>";
-      html += "<td>"+descripcionP[i]+"</td>";
-      html += "<td>"+precioP[i]+"</td>";
-      html += "<td>"+cantidadP[i]+"</td>";
-      html += "<td>"+((cantidadP[i]*1)*(precioP[i]*1))+"</td>";
+      html += "<td>"+tipoUnitario[i]+"</td>";
+      html += "<td>"+cantidadTU[i]+"</td>";
+      html += "<td>"+precioTU[i]+"</td>";
+      html += "<td>"+((cantidadTU[i]*1)*(precioTU[i]*1))+"</td>";
     html += "</tr>";
-    total = (total * 1) + ((cantidadP[i]*1)*(precioP[i]*1));
+    total = (total * 1) + ((cantidadTU[i]*1)*(precioTU[i]*1));
     //html += idProducto[i]+" "+cantidadP[i]+"\n";
   }
   html += '</tbody>';
@@ -290,6 +306,15 @@ var limpiarLista = function () {
   descripcionP.length =0;
   precioP.length =0;
   totalP.length = 0;
+  idProducto.length = 0;
+  cantidadP.length = 0;
+  nombreP.length = 0;
+  idPrecioTipoU.length = 0;
+  cantidadTU.length = 0;
+  precioTU.length = 0;
+  totalP.length = 0;
+  tipoUnitario.length = 0;
+  cantidadReal.length = 0;
   indice = 0;
   $('#notificacionL').html("");
 }

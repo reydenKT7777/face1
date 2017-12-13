@@ -65,8 +65,8 @@ class Admin extends CI_Controller {
 				'protocol' => 'smtp',
 				'smtp_host' => 'ssl://smtp.gmail.com',
 				'smtp_port' => 465,
-				'smtp_user' => 'jenniferale.2017@gmail.com',
-				'smtp_pass' => 'jennifer.2017',
+				'smtp_user' => 'echgutierrez@gmail.com',
+				'smtp_pass' => 'ga-alizee',
 				'mailtype' => 'html',
 				'charset' => 'utf-8',
 				'newline' => "\r\n"

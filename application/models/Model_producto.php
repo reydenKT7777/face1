@@ -101,7 +101,8 @@ class Model_producto extends CI_Model {
 		$r = $this->db->query("select *
 													FROM precioTipoU p
 													INNER JOIN tipo_unitario t ON t.id = p.id_tipo_unitario
-													where p.id_producto = $idProducto");
+													where p.id_producto = $idProducto and
+													p.estadoPTU = 1");
 		return $r->result();
 	}
 }

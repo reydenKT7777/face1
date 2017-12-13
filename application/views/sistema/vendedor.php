@@ -24,26 +24,25 @@
 							<div class="">
 								<div class="col-xs-12 col-md-12 bloque">
 											<br> <center><h3 style="color:#14b03f">Productos disponibles</h3></center>
+											<input type="hidden" id="idPrecioTipoU">
+											<input type="hidden" id="cantidadTU">
+											<input type="hidden" id="precioU">
+											<input type="hidden" id="ptunitario">
+											<input type="hidden" id="nombre_tipo_u">
+											<input type="hidden" id="stockPro">
 											<div class="form-group col-xs-12 col-md-12">
 													<select class="form-control" id="productos">
 														<option value="0">[.::::::::::::Buscar Producto::::::::::::.]</option>
 													</select>
 											</div>
-											<div class="col-xs-12 col-md-4">
-												<div class="form-group">
-												  <input type="text" class="form-control" id="cantidadP" placeholder="Cantidad" title="Cantidad del producto">
-												</div>
+											<div class="col-xs-12 col-md-4 stock" style="background-color:#5c6c94; color:#fff;">
+
 											</div>
 											<div class="col-xs-2 col-md-4">
 												<div class="form-group">
 												  <button type="button" class="btn btn-info btnv2" title="Agregar a la lista de productos" onclick="agergarALista()">Agergar <i class="fa fa-plus-circle"></i></button>
 												</div>
 											</div>
-								</div>
-								<div class="col-xs-12 col-sm-12">
-									<div class="col-xs-12 col-sm-8 stock" style="background-color:#5c6c94; color:#fff;">
-
-									</div>
 								</div>
 							</div>
 					</div>
@@ -93,11 +92,11 @@
 											<thead style="background-color:#638cbc; color:#fff">
 												<tr>
 													<th>Producto</th>
-													<th>Detalle</th>
+													<th>Marca</th>
+													<th>T/U</th>
 													<th>Cantidad</th>
-													<th>Precio</th>
+													<th>Precio/U</th>
 													<th>total</th>
-
 												</tr>
 											</thead>
 											<tbody id="contenidoVenta">
@@ -107,8 +106,9 @@
 													<td></td>
 													<td></td>
 													<td></td>
+													<td></td>
 													<td>Total</td>
-													<td><input type="text" name="total" id="total" placeholder="total BS" class="form-control "> </td>
+													<td><input type="text" name="total" id="total" placeholder="total BS" class="form-control " readonly=""></td>
 												</tr>
 											</tfoot>
 										</table>
@@ -308,9 +308,8 @@ markup += "<div class='select2-result-repository__meta'>" +
 				"<div class='select2-result-repository__title'>" +
 				"<span class='label label-success'>Producto</span>"+repo.nombre_pro +
 				 //" <span class='label label-success'>Descripci&oacute;n</span>: " + repo.descripcion +
-				 "<br><br>	 <span class='label label-primary'>Precio</span>: "+ repo.precio +
 				 "	 <span class='label label-warning'>Marca</span>: " + repo.marca +
-				 "	 <span class='label label-danger'>Stock</span>: " + repo.stock +
+
 				 "</div>";
 		markup += "<div class='select2-result-repository__statistics'>" +
 		"</div>" +
@@ -421,75 +420,108 @@ $('#productos').on('change', function() {
 		dataType: 'json',
 		data: {id: id},
 		success:function (data) {
+			tipoUnitarioPR = data.ptu;
+			pro = data.producto;
 			$('#pUnitario').val(data.producto[0]["precio"]);
-			var html = "<h3>Stock de "+data.producto[0]["nombre_pro"]+" "+data.producto[0]["marca"]+" : "+data.producto[0]["stock"]+" Unidades <input type='hidden' value='"+data.producto[0]["stock"]+"' id='stockLimite'></h3>";
+			var html = "<h4 style='color:#fff' id='stockTU'></h4>";
+			html += '<ul>';
+					for (var i = 0; i < data.ptu.length; i++) {
+						html += '<li style="color:#fff">'+
+										'<div class="radio">'+
+		                  '<label>'+
+		                      '<input type="radio" name="tipoU" value="'+i+'" class="tunitario"> '+data.ptu[i]["nombre_tipo_u"]+
+		                  '</label>'+
+		              '</div></li>';
+					}
+			html += '</ul>';
 			$('.stock').html(html);
+			$('.tunitario').on('click', function() {
+				var index = $(this).val();
+				$('#idPrecioTipoU').val(tipoUnitarioPR[index]["idPrecioTipoU"]);
+				$('#cantidadTU').val(tipoUnitarioPR[index]["cantidadTU"]);
+				$('#precioU').val(tipoUnitarioPR[index]["precioU"]);
+				$('#ptunitario').val(tipoUnitarioPR[index]["ptunitario"]);
+				$('#nombre_tipo_u').val(tipoUnitarioPR[index]["nombre_tipo_u"]);
+				$('#stockPro').val(data.producto[0]["stock"]);
+				var stockTU = (data.producto[0]["stock"] *1) / (tipoUnitarioPR[index]["cantidadTU"]*1);
+				$('#stockTU').html("El stock disble de "+stockTU.toFixed(2)+" "+tipoUnitarioPR[index]["nombre_tipo_u"]);
+				//alert("Identificador:"+id+" => Precio:"+precioU);
+			});
 		}
-	})
-	.done(function() {
-		console.log("success");
-	})
-	.fail(function() {
-		console.log("error");
-	})
-	.always(function() {
-		console.log("complete");
 	});
 
 });
 // Funcion que agregar el producto a la lista de nota de venta
 var agergarALista = function () {
-	var c = $('#cantidadP').val();
-	var stock = $('#stockLimite').val();
-	var id = $('#productos').val();
-	if (c != "" && c != 0 && (stock*1) >= (c*1) && id != 0) {
+	var stock = $('#stockPro').val();
 
-		$.ajax({
-			url: base_url+'index.php/controlador_producto/buscar_producto',
-			type: 'POST',
-			dataType: 'json',
-			data: {id: id},
-			success:function (data) {
-				var cantidad = $('#cantidadP').val();
-				var total = (data.producto[0]["precio"]*1) * (cantidad*1);
-				var html = "";
-				html +="<tr>"+
-									"<td>"+data.producto[0]["nombre_pro"]+"</td>"+
-									"<td>"+data.producto[0]["marca"]+"</td>";
-					html += "<td>"+cantidad+"</td>"+
-									"<td>"+data.producto[0]["precio"]+"</td>"+
-									"<td>"+total+"</td>"+
-									'<input type="hidden" name="id_producto[]" value="'+data.producto[0]["id"]+'">'+
-									'<input type="hidden" name="cantidadproducto[]" value="'+cantidad+'">'+
-									'<input type="hidden" name="totalprecio[]" value="'+total+'">'+
-								"</tr>";
-				$('#total').val(($('#total').val()*1) + (total*1));
-				$('#contenidoVenta').append(html);
-				$('#cantidadP').val("");
-			}
-		})
-		.done(function() {
-			console.log("success");
-		})
-		.fail(function() {
-			console.log("error");
-		})
-		.always(function() {
-			console.log("complete");
-		});
+	if ((stock*1) >0) {
+		var id = $('#productos').val();
+			$.ajax({
+				url: base_url+'index.php/controlador_producto/buscar_producto',
+				type: 'POST',
+				dataType: 'json',
+				data: {id: id},
+				success:function (data) {
+					//var cantidad = $('#cantidadP').val();
+					//var total = (data.producto[0]["precio"]*1) * (cantidad*1);
+					var html = "";
+					var nombre_tipo_u = $('#nombre_tipo_u').val();
+					var cTipoU = $('#cantidadTU').val();
+					var idPTU = $('#idPrecioTipoU').val();
+					var ptunitario = $('#ptunitario').val();
+					html +="<tr>"+
+										"<td>"+data.producto[0]["nombre_pro"]+"</td>"+
+										"<td>"+data.producto[0]["marca"]+"</td>"+
+										"<td><input type='hidden' id='idPTU"+idPTU+"' name='idPTU[]' value='"+idPTU+"'>"+nombre_tipo_u+"</td>";
+						html += "<td><input type='hidden' id='cantidadReal"+idPTU+"' name='cantidadReal[]' value='"+cTipoU+"'>";
+								html += "<input type='text' id='cantidadTU"+idPTU+"' name='cantidadTU[]' value='1' onkeyup='calcularLista("+idPTU+")' class='form-control'></td>"+
+										'<td><input type="text" id="precioTU'+idPTU+'" name="precioTU[]" value="'+ptunitario+'" onkeyup="calcularLista('+idPTU+')" class="form-control" readonly=""></td>'+
+										'<td><input type="text" id="totalTU'+idPTU+'" name="totalTU[]" value="'+ptunitario+'" class="form-control" readonly=""></td>'+
+										'<input type="hidden" id="ctipou'+idPTU+'" name="ctipou[]" value="'+cTipoU+'">'+
+										'<input type="hidden" id="producto'+idPTU+'" name="producto[]" value="'+data.producto[0]["id"]+'">'+
+										'<input type="hidden" id="stock'+idPTU+'" value="'+data.producto[0]["stock"]+'">'+
+									"</tr>";
+					$('#contenidoVenta').append(html);
+					//$('#cantidadP').val("");
+				}
+			});
 	}
 	else {
-		if (c == "" || c == 0 && id != 0) {
-			alert("El campo de cantidad esta vacio!!");
-		}
-		if (!((stock*1) >= (c*1)) && id != 0) {
-			alert("La no existe esa cantidad en almacen ["+ c+"] => "+stock);
-		}
-		if (id == 0) {
-			alert("Es necesario que seleccione un producto");
-		}
+		alert("producto agotado!!");
 	}
+	var t = 0;
+	$('input[name="totalTU[]"]').each(function() {
+		if ($(this).val() != "") {
+			t = t + ($(this).val()*1);
+		}
+	});
+	$("#total").val(t);
+}
+var calcularLista = function (id) {
+	var cantidadTU = $('#cantidadTU'+id).val();
+	var stock = $('#stock'+id).val();
+	var ctipou = $('#ctipou'+id).val();
+	var precioTU = $('#precioTU'+id).val();
+	var total = (cantidadTU * 1) * (precioTU);
 
+	if ((stock*1) >= ((cantidadTU*1)*(ctipou))) {
+		$('#totalTU'+id).val(total.toFixed(2));
+		var real = (ctipou*1)*(cantidadTU*1);
+		$('#cantidadReal'+id).val(real.toFixed(2));
+	}
+	else {
+		alert("No existe esa cantidad en Almacen!!");
+		$('#totalTU'+id).val(0);
+		$('#cantidadTU'+id).val(0);
+	}
+	var t = 0;
+	$('input[name="totalTU[]"]').each(function() {
+		if ($(this).val() != "") {
+			t = t + ($(this).val()*1);
+		}
+	});
+	$("#total").val(t);
 }
 // funciones que imprimen formularios de ingreso de nuevos registro de tabla cliente
 var imprimir_agregar_cliente = function() {

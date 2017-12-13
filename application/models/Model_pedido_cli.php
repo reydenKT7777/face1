@@ -47,12 +47,15 @@ class Model_pedido_cli extends CI_Model {
 	}
 	public function verPedido($id)
 	{
-		$r = $this->db->query("select *, d.id as idDetalle
-													from pedido_cli p, detalle_pedido_cli d, producto pro,sucursal s
-													where d.nro_pedido = p.nro_pedido and
-													s.id = p.id_sucursal and
-													d.id_producto = pro.id and
-													p.nro_pedido = $id");
+		$r = $this->db->query("SELECT p.fecha_pedido, p.nro_pedido,p.monto,s.nombre,
+													 pro.nombre_pro,pro.marca,tu.nombre_tipo_u,d.cantidadTU,d.precioTU,d.total
+													FROM pedido_cli p
+													INNER JOIN sucursal s ON s.id = p.id_sucursal
+													INNER JOIN detalle_pedido_cli d ON p.nro_pedido = d.nro_pedido
+													INNER JOIN producto pro ON pro.id = d.id_producto
+													INNER JOIN precioTipoU pre ON pre.idPrecioTipoU = d.idPrecioTipoU
+													INNER JOIN tipo_unitario tu ON tu.id = pre.id_tipo_unitario
+													WHERE p.nro_pedido = $id");
 		return $r->result();
 	}
 }

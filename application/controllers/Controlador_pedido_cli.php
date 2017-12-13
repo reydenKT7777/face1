@@ -98,7 +98,25 @@ class Controlador_pedido_cli extends CI_Controller {
                       'estado' => 0
                     );
     $id_pedido = $this->model_pedido_cli->agregar_datos($pedidoCli);
+		// Añadir detalle
+		$idPrecioTipoU = $this->input->post('idPrecioTipoU');
+		$cantidadTU = $this->input->post('cantidadTU');
+		$precioTU = $this->input->post('precioTU');
+		$cantidadReal = $this->input->post('cantidadReal');
+		$totalP = $this->input->post('totalP');
+		for ($i=0; $i < count($id_producto) ; $i++) {
+      $detalle = array('nro_pedido' => $id_pedido,
+                        'id_producto' => $id_producto[$i],
+                        'idPrecioTipoU' => $idPrecioTipoU[$i],
+                        'cantidad' => $cantidadReal[$i],
+                        'cantidadTU' => $cantidadTU[$i],
+                        'precioTU' => $precioTU[$i],
+                        'total' => $totalP[$i],
+                        'estado' => 1
+                      );
 
+      $this->model_detalle_pedido_cli->agregar_datos($detalle);
+    }
     for ($i=0; $i < count($id_producto) ; $i++) {
 			$detalle = array('nro_pedido' => $id_pedido,
                         'id_producto' => $id_producto[$i],

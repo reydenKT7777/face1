@@ -126,11 +126,27 @@
            </div>
        </div>
 <!--====================================================================-->
+<!--====================================================================-->
+         <div class="modal fade modal_reporte" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+           <div class="modal-dialog modal-lg" role="document">
+             <div class="modal-content">
+                 <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">×</span></button>
+                 <h4 class="modal-title" id="myLargeModalLabel">Desea eliminar los siguientes datos?</h4> </div>
+                 <div class="modal-body">
+                  <div class="reportesPDF">
 
+                  </div>
+
+               </div>
+             </div>
+           </div>
+       </div>
+<!--====================================================================-->
 <script>
 var base_url = '<?=base_url()?>';
 // Funcion que imprime la lista de registos de l atabla contrato
-
 var imprime_lista_contrato = function() {
 	$.ajax({
 		url: base_url+'index.php/controlador_contrato/listar_contrato',
@@ -201,8 +217,10 @@ var imprime_tabla_contrato = function(data) {
 			    html += '<td>'+data[i]['fecha_fin_contrato']+'</td>';
 			    html += '<td>';
           if (data[i]["estadoContrato"]==1) {
-            html += '<button class="btn btn-info btn-xs" onclick ="mostrar_modificar_contrato('+data[i]['id_c']+')">Modificar</button>';
+            html += "<a href='"+base_url+"index.php/controlador_contrato/reportePDF?id="+data[i]['id_c']+"' target='_blanck' class='btn btn-success btn-xs' title='Ver contrato'><i class='fa fa-file-pdf-o'></i></a>";
+            html += '<button class="btn btn-primary btn-xs" onclick ="mostrar_modificar_contrato('+data[i]['id_c']+')">Modificar</button>';
             html += '<button class="btn btn-danger btn-xs" onclick ="mostrar_eliminar_contrato('+data[i]['id_c']+')">Eliminar</button>';
+
           }
           else {
             html += '<button class="btn btn-warning btn-xs" onclick ="activar_contrato('+data[i]['id_c']+')">Activar</button>';
@@ -228,15 +246,6 @@ var activar_contrato = function (id) {
     success:function () {
       imprime_lista_contrato();
     }
-  })
-  .done(function() {
-    console.log("success");
-  })
-  .fail(function() {
-    console.log("error");
-  })
-  .always(function() {
-    console.log("complete");
   });
 
 }
@@ -303,15 +312,6 @@ var imprimir_agregar_contrato = function() {
             $('.Vprevia').empty();
             $('.Vprevia').html(html);
           }
-        })
-        .done(function() {
-          console.log("success");
-        })
-        .fail(function() {
-          console.log("error");
-        })
-        .always(function() {
-          console.log("complete");
         });
       }
       mostrarTipoContrato();
@@ -327,10 +327,12 @@ var agregar_contrato = function () {
       data: formdata,
       contentType: false,
       processData: false,
-      success: function(){
+      success: function(html){
        $('.modal_agregar_datos_contrato').modal('hide');
 	     $('.formulario_crear_contrato').empty();
 	     imprime_lista_contrato();
+       $(".modal_reporte").modal("show");
+       $(".reportesPDF").html(html);
       }
   	});
 }
@@ -374,7 +376,7 @@ var imprime_formulario_ingreso_contrato = function(data) {
 		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>estado</label>";
 		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='estado' class='form-control' id='estado'></div>";
 		  	html += "</div>";
-			html+= "<div class='form-group'>";
+			html+= "<div class='form-group' style='display:none'>";
 		    	html +=	"<label class='control-label col-md-4 col-sm-4 col-xs-12'>Fecha fin</label>";
 		    	html += "<div class='col-md-8 col-sm-8 col-xs-12'><input type='text' name='fecha_fin_contrato' class='form-control' id='fecha_fin_contrato' readonly></div>";
 		  	html += "</div>";
@@ -437,15 +439,6 @@ var mostrar_modificar_contrato = function (idd) {
           $('.Vprevia').empty();
           $('.Vprevia').html(html);
         }
-      })
-      .done(function() {
-        console.log("success");
-      })
-      .fail(function() {
-        console.log("error");
-      })
-      .always(function() {
-        console.log("complete");
       });
     }
     mostrarTipoContrato();

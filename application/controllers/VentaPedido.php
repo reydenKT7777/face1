@@ -18,7 +18,7 @@ class VentaPedido extends CI_Controller{
   {
     $id_cliente = $this->input->post("cliente");
     $total = $this->input->post("total");
-    $id_producto = $this->input->post("id_producto");
+    $id_producto = $this->input->post("producto");
     $cantidadP = $this->input->post("cantidadproducto");
     $totalPrecio = $this->input->post("totalprecio");
     $tipoVenta = $this->input->post("tipoVenta");
@@ -30,17 +30,26 @@ class VentaPedido extends CI_Controller{
                       'estado' => 1
                     );
     $id_pedido = $this->model_pedido_cli->agregar_datos($pedidoCli);
+    //-------------Añadir detalle venta
+		$idPTU = $this->input->post('idPTU');
+		$cantidadReal = $this->input->post('cantidadReal');
+		$cantidadTU = $this->input->post('cantidadTU');
+		$precioTU = $this->input->post('precioTU');
+		$totalTU = $this->input->post('totalTU');
     for ($i=0; $i < count($id_producto) ; $i++) {
       $detalle = array('nro_pedido' => $id_pedido,
                         'id_producto' => $id_producto[$i],
-                        'cantidad' => $cantidadP[$i],
-                        'total' => $totalPrecio[$i],
+                        'idPrecioTipoU' => $idPTU[$i],
+                        'cantidad' => $cantidadReal[$i],
+                        'cantidadTU' => $cantidadTU[$i],
+                        'precioTU' => $precioTU[$i],
+                        'total' => $totalTU[$i],
                         'estado' => 1
                       );
 
       $this->model_detalle_pedido_cli->agregar_datos($detalle);
-      $this->model_producto->decrementar($id_producto[$i],$cantidadP[$i]);
-      $this->model_producto->historialSal($id_producto[$i],$cantidadP[$i]);
+      $this->model_producto->decrementar($id_producto[$i],$cantidadReal[$i]);
+      $this->model_producto->historialSal($id_producto[$i],$cantidadReal[$i]);
     }
     if ($tipoVenta == "Al contado") {
       $notaVenta = array('nro_pedido' => $id_pedido,
@@ -68,17 +77,38 @@ class VentaPedido extends CI_Controller{
     }
     $this->model_nota_venta->agregar_datos($notaVenta);
 
-    echo "<br><br><br><br><br>
-          <center>
-            <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>
-              La venta fue realizada con exito <i class='fa fa-check'></i>
-            </a><br><br>
-            <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".$id_pedido."' target='_blank' class='btn btn-info'>
-              Imprimir reporte <i class='fa fa-file-pdf-o'></i>
-            </a>
-          </center>
-          <br><br><br><br><br>";
+    if ($this->session->cargo == "Super administrador") {
+      echo "<br><br><br><br><br>
+            <center>
+              <a href='".base_url()."index.php/ventaPedido/ventasAdmin' class='btn btn-success'>
+                La venta fue realizada con exito <i class='fa fa-check'></i>
+              </a><br><br>
+              <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".$id_pedido."' target='_blank' class='btn btn-info'>
+                Imprimir reporte <i class='fa fa-file-pdf-o'></i>
+              </a>
+            </center>
+            <br><br><br><br><br>";
+    }
+    else {
+      echo "<br><br><br><br><br>
+            <center>
+              <a href='".base_url()."index.php/admin/vendedor' class='btn btn-success'>
+                La venta fue realizada con exito <i class='fa fa-check'></i>
+              </a><br><br>
+              <a href='".base_url()."index.php/ventaPedido/reportePDF?id=".$id_pedido."' target='_blank' class='btn btn-info'>
+                Imprimir reporte <i class='fa fa-file-pdf-o'></i>
+              </a>
+            </center>
+            <br><br><br><br><br>";
+    }
   }
+  public function ventasAdmin()
+  {
+    $this->verificar();
+		$data["vista"] = 'sistema/vendedor';
+		$this->load->view('frontend/main_admin',$data);
+  }
+
   public function agregarVentaPedido()
   {
     $this->load->model('model_pedido_cli');
@@ -272,9 +302,11 @@ class VentaPedido extends CI_Controller{
 		 * $this->pdf->Cell(Ancho, Alto,texto,borde,posición,alineación,relleno);
 		 */
 		$this->pdf->Cell(5,7,'#','TBL',0,'C','1');
-	  $this->pdf->Cell(130,7,utf8_decode('DESCRIPCIÓN'),'TB',0,'L','1');
-	  //$this->pdf->Cell(25,7,'CODIGO','TB',0,'L','1');
-	  $this->pdf->Cell(20,7,'CANTIDAD','TB',0,'L','1');
+	  $this->pdf->Cell(80,7,utf8_decode('PRODUCTO'),'TB',0,'L','1');
+	  $this->pdf->Cell(20,7,utf8_decode('MARCA'),'TB',0,'L','1');
+	  $this->pdf->Cell(20,7,'T/U','TB',0,'L','1');
+    $this->pdf->Cell(20,7,'CANTIDAD','TB',0,'L','1');
+    $this->pdf->Cell(20,7,'PRECIO/U','TB',0,'L','1');
 		$this->pdf->Cell(20,7,'TOTAL','TBR',0,'l','1');
 	  $this->pdf->Ln(7);
 	  // La variable $x se utiliza para mostrar un número consecutivo
@@ -285,33 +317,52 @@ class VentaPedido extends CI_Controller{
 			// se imprime el numero actual y despues se incrementa el valor de $x en uno
       $this->pdf->Cell(5,5,$x++,'BL',0,'C',0);
       // Se imprimen los datos de cada alumno
-      $this->pdf->Cell(130,5,utf8_decode($row->nombre_pro).utf8_decode($row->marca),'B',0,'L',0);
-      //$this->pdf->Cell(25,5,$row->cod_item,'B',0,'L',0);
-      $this->pdf->Cell(20,5,$row->cantidad,'B',0,'L',0);
-      //$this->pdf->Cell(20,5,$row->peso_item." ".$row->tipo_unitario,'B',0,'L',0);
-      //$this->pdf->Cell(20,5,"Bs ".number_format($row->precio_x_kl,2,'.',','),'B',0,'L',0);
-      //$this->pdf->Cell(20,5,"Bs ".number_format($row->monto_total,2,'.',','),'B',0,'L',0);
-			//$this->pdf->Cell(20,5,"$ ".number_format($row->precio_usd,2,'.',','),'B',0,'L',0);
+      $this->pdf->Cell(80,5,utf8_decode($row->nombre_pro),'B',0,'L',0);
+      $this->pdf->Cell(20,5,$row->marca,'B',0,'L',0);
+      $this->pdf->Cell(20,5,$row->nombre_tipo_u,'B',0,'L',0);
+      $this->pdf->Cell(20,5,$row->cantidadTU,'B',0,'L',0);
+      $this->pdf->Cell(20,5,"Bs. ".number_format(($row->precioTU),2,'.',','),'B',0,'L',0);
 			$this->pdf->Cell(20,5,"Bs. ".number_format(($row->total),2,'.',','),'BR',0,'L',0);
       //Se agrega un salto de linea
       $this->pdf->Ln(5);
 
 		}
 		$this->pdf->Cell(5,7,'','TBL',0,'C','0');
-	  $this->pdf->Cell(130,7,'','TB',0,'L','0');
+	  $this->pdf->Cell(80,7,'','TB',0,'L','0');
 	  $this->pdf->Cell(20,7,'','TB',0,'L','0');
-	  //$this->pdf->Cell(20,7,'','TB',0,'L','0');
-		//$this->pdf->Cell(20,7,'TOTAL','TB',	0,'C','0');
-	  //$this->pdf->Cell(20,7,"Bs ".number_format($total,2,'.',','),'TB',0,'L','0');
-	  //$this->pdf->Cell(20,7,'','TB',0,'C','0');
+    $this->pdf->Cell(20,7,'','TB',0,'L','0');
+    $this->pdf->Cell(20,7,'','TB',0,'L','0');
+    $this->pdf->Cell(20,7,'','TB',0,'L','0');
 		$this->pdf->Cell(20,7,"Bs. ".number_format($monto_total,2,'.',','),'TBR',0,'L','0');
 	  $this->pdf->Ln(7);
 		$this->pdf->Output("REPORTE NOTA VENTA .pdf", 'I');
 	}
+  //busqueda de reportes
+  public function buscarFechas()
+  {
+    $f1 = $this->input->post('f1');
+    $f2 = $this->input->post('f2');
+    $r = $this->model_nota_venta->buscarFechas($f1,$f2);
+    echo json_encode($r);
+  }
   public function buscarClientes()
   {
     $idCliente = $this->input->post('idCliente');
     $r = $this->model_nota_venta->buscarCliente($idCliente);
+    echo json_encode($r);
+  }
+  public function buscarNotasV()
+  {
+    $nota = $this->input->post('nota');
+    $r = $this->model_nota_venta->buscarNotasV($nota);
+    echo json_encode($r);
+  }
+  public function buscarClientesFecha()
+  {
+    $f1 = $this->input->post('f1');
+    $f2 = $this->input->post('f2');
+    $idCliente = $this->input->post('idCliente');
+    $r = $this->model_nota_venta->buscarClientesFecha($idCliente,$f1,$f2);
     echo json_encode($r);
   }
   public function verReporteTotal()

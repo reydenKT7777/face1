@@ -145,7 +145,7 @@ $(document).ready(function() {
 															'<td class="success">'+data[i]["monto_total"]+'</td>'+
 															'<td class="warning">'+data[i]["montoPendiente"]+'</td>';
 															html += '<td>';
-															html += '<button type="button" class="btn btn-success btn-xs" title="Ver Cuentas" onclick="verCuentas('+data[i]["nro_pedido"]+')"><i class="fa fa-eye"></i></button>';
+															html += '<button type="button" class="btn btn-success btn-xs" title="Ver Cuentas" onclick="verCuentas('+data[i]["id"]+')"><i class="fa fa-eye"></i></button>';
 															html += '</td>';
 														'</tr>';
 									}
